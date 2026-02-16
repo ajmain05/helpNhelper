@@ -1,0 +1,409 @@
+.hero-section {
+  margin-top: 40px;
+}
+.hero-title {
+  margin-top: 72px;
+  font-style: normal;
+  font-size: 70px;
+  font-weight: 700;
+  width: 626px;
+  height: 156px;
+}
+.hero-text {
+  margin-top: 45px;
+  color: #000;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+}
+.hero-btn {
+  margin-top: 45px;
+  display: inline-flex;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 25px;
+  background: #1a1e8d;
+  color: white;
+}
+.hero-btn:hover {
+  background: #fff;
+  color: #1a1e8d;
+  border: 1px solid #1a1e8d;
+}
+
+.hero-footer {
+  margin-top: 27px;
+}
+
+.campaign-section {
+  margin-top: 150px;
+}
+.section-title {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+.section-subtitle {
+  margin-top: 13px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.btn-campaign-category {
+  padding: 8px 24px;
+  margin: 0 10px;
+  gap: 8px;
+  border-radius: 35px;
+  color: #bdbdbd;
+  border: 1px solid #bdbdbd;
+}
+.campaign-btn-container input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+.btn-campaign-category:hover,
+.campaign-btn-container input[type="radio"]:checked + .btn-campaign-category {
+  background: #1a1e8d;
+  color: #fff;
+}
+.campaign-content {
+  margin-top: 45px;
+  /* height: 466px; */
+}
+.campaign-card {
+  border-radius: 15px;
+  height: 239px;
+}
+.primary-featured {
+  height: 466px;
+}
+.secondary-featured {
+  height: 213px;
+}
+.campaign-card-img {
+  height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+}
+.campaign-card-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 13px;
+  border-radius: 8px;
+  background: #1a1e8d;
+  color: #fff;
+  padding: 8px;
+}
+.campaign-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.24);
+  border-radius: 15px;
+  color: #fff;
+  padding: 22px;
+}
+.campaign-progress {
+  height: 4px;
+  border-radius: 8px;
+  margin-bottom: 7px;
+}
+.campaign-progress-bar {
+  background: #b4b6ff;
+}
+.current-campaign-section {
+  margin-top: 87px;
+}
+.current-campaign-content {
+  margin-top: 32px;
+}
+.current-campaign-progress-bar {
+  background: #1a1e8d;
+}
+.current-campaign-card {
+  border-radius: 32px;
+  height: 522px;
+  background: #fff;
+  box-shadow: 0 4px 6px -2px rgba(18, 25, 38, 0.03),
+    0 12px 16px -4px rgba(18, 25, 38, 0.08);
+  cursor: pointer;
+}
+.current-campaign-card-img {
+  border-radius: 32px 32px 0 0;
+  height: 50%;
+}
+.card-body {
+  overflow: hidden;
+}
+.current-campaign-card-footer {
+  background: #fff;
+  border-radius: 0 0 32px 32px;
+}
+.learn-more-link {
+  color: #000;
+}
+.stats-section {
+  width: 100%;
+  margin-top: 50px;
+}
+.stat-title,
+.stat-subtitle {
+  color: #fff;
+  text-align: center;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+}
+.state-section-row {
+  width: 100%;
+  margin: 0;
+}
+.state-content {
+  margin: 0;
+  padding: 0;
+}
+.fund-content {
+  background: #353772;
+  height: 351px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.seeker-content {
+  background: #24265f;
+  height: 351px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.volunteer-content{
+  background: #353772;
+  height: 351px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.donate-content {
+  background: #24265f;
+
+  height: 351px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.visitor-content {
+  background: #353772;
+
+  height: 351px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.featured-campaigns-section {
+  margin-top: 54px;
+}
+.featured-campaigns-content {
+  margin-top: 32px;
+}
+.featured-campaign-tabs {
+  border-right: 2px solid rgba(126, 147, 186, 0.3) !important;
+}
+
+.featured-campaign-tab-link {
+  padding: 21px;
+  border: 0;
+}
+.featured-campaign-tab-link:hover {
+  border: 0;
+}
+.featured-campaign-tabs > .active {
+  border: 2px solid !important;
+  border-color: transparent #252bd1 transparent transparent !important;
+}
+.featured-campaign-icon-content {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  padding: 0 25px;
+  background: #1a1e8d1a;
+}
+.featured-campaign-title-icon {
+  font-size: 22px;
+  background: linear-gradient(
+    121deg,
+    #252bd1 1.87%,
+    rgba(26, 30, 141, 0.61) 79.6%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.35;
+}
+.active
+  > .featured-campaign-menu
+  > .featured-campaign-icon-content
+  > .featured-campaign-title-icon,
+.featured-campaign-tab-link:hover
+  > .featured-campaign-menu
+  > .featured-campaign-icon-content
+  > .featured-campaign-title-icon {
+  opacity: 1;
+}
+.featured-campaign-title {
+  margin-left: 18px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Philosopher";
+  background: linear-gradient(
+    121deg,
+    #252bd1 1.87%,
+    rgba(26, 30, 141, 0.61) 79.6%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.35;
+}
+.active > .featured-campaign-menu > .featured-campaign-title,
+.featured-campaign-tab-link:hover
+  > .featured-campaign-menu
+  > .featured-campaign-title {
+  opacity: 1;
+}
+.featured-campaign-content {
+  margin-left: 36px;
+}
+.featured-campaign-content-text {
+  height: 350px;
+  overflow: hidden;
+}
+.featured-campaign-content-title {
+  margin-bottom: 25px;
+  font-weight: 700;
+  background: linear-gradient(
+    121deg,
+    #252bd1 1.87%,
+    rgba(26, 30, 141, 0.61) 79.6%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.featured-campaign-content-subtitle {
+  margin-bottom: 0;
+}
+.featured-campaign-content-desc {
+  color: #828282;
+}
+.featured-campaign-content-img {
+  margin-left: 24px;
+  width: 343px;
+  height: 354px;
+  border-radius: 58.804px 0;
+  object-fit: cover;
+}
+.stories-section {
+  margin-top: 64px;
+  background: #f4f7fa;
+}
+.stories-section > .container {
+  padding-top: 100px;
+  padding-bottom: 80px;
+}
+.stories-content {
+  margin-top: 54px;
+}
+.story-content {
+  margin-left: 94px;
+}
+.story-content-title {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.story-tabs {
+  border: 0 !important;
+}
+.story-tabs > .story-tab-link {
+  border-top: 2px solid rgba(126, 147, 186, 0.3);
+  color: rgba(126, 147, 186, 0.3);
+  padding: 16px 0;
+}
+
+.story-tab-link:hover {
+  border: 2px solid !important;
+  border-color: #252bd1 transparent transparent transparent !important;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  color: #000000;
+}
+.story-tabs > .active {
+  background-color: transparent !important;
+  border: 2px solid;
+  border-color: #252bd1 transparent transparent transparent !important;
+  font-size: 20px !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+}
+.testimonial-section {
+  margin-top: 66px;
+}
+.testimonial-content {
+  margin-top: 81px;
+}
+.testimonial-item {
+  padding: 53px 45px;
+  background: #f4f7fa;
+}
+.testimonial-img {
+  width: 75px !important;
+  height: 75px;
+}
+.testimonial-item-header-content {
+  margin-left: 24px;
+}
+.testimonial-item-header-title {
+  font-size: 30px;
+  font-weight: 700;
+}
+.testimonial-item-header-subtitle {
+  font-family: "Philosopher";
+  font-size: 20px;
+  background: linear-gradient(
+    121.24deg,
+    #252bd1 1.87%,
+    rgba(26, 30, 141, 0.61) 79.6%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.testimonial-divider {
+  margin-top: 32px;
+  height: 1px;
+  background: #797e89;
+}
+.testimonial-item-content {
+  margin-top: 25px;
+  color: #3d3d3d;
+  font-style: italic;
+}
+.banner-section {
+  margin: 116px 80px 80px;
+}
+.percentage {
+  position: absolute;
+  padding: 5px;
+  background-color: #252bd1;
+  color: white;
+  /* border-radius: 10px; */
+  bottom: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}

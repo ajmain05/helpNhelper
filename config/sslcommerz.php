@@ -1,0 +1,25 @@
+<?php
+
+// SSLCommerz configuration
+
+$apiDomain = env('IS_LOCALHOST') ? 'https://sandbox.sslcommerz.com' : 'https://securepay.sslcommerz.com';
+
+return [
+    'apiCredentials' => [
+        'store_id' => env('SSLCZ_STORE_ID'),
+        'store_password' => env('SSLCZ_STORE_PASSWORD'),
+    ],
+    'apiUrl' => [
+        'make_payment' => '/gwprocess/v4/api.php',
+        'transaction_status' => '/validator/api/merchantTransIDvalidationAPI.php',
+        'order_validate' => '/validator/api/validationserverAPI.php',
+        'refund_payment' => '/validator/api/merchantTransIDvalidationAPI.php',
+        'refund_status' => '/validator/api/merchantTransIDvalidationAPI.php',
+    ],
+    'apiDomain' => $apiDomain,
+    'connect_from_localhost' => env('IS_LOCALHOST', true), // For Sandbox, use "true", For Live, use "false"
+    'success_url' => '/payment/success',
+    'failed_url' => '/payment/failed',
+    'cancel_url' => '/payment/cancel',
+    'ipn_url' => '/payment/ipn',
+];

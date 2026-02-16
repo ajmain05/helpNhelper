@@ -1,0 +1,95 @@
+.btn-story-category{
+  padding: 8px 24px;
+  margin: 0 10px;
+  gap: 8px;
+  border-radius: 35px;
+  color: #BDBDBD;
+  border: 1px solid #BDBDBD;
+}
+.story-btn-container input[type=radio] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+.btn-story-category:hover, .story-btn-container input[type=radio]:checked + .btn-story-category {
+  background: #1A1E8D ;
+  color: #fff ;
+}
+
+.success-stories-content{
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.success-story-tabs{
+  border-right: 2px solid rgba(126, 147, 186, 0.30) !important;
+}
+
+.success-story-tab-link{
+  padding: 22px;
+  border: 0;
+}
+.success-story-tab-link:hover{
+  border: 0;
+}
+.success-story-tabs > .active{
+  border: 2px solid !important;
+  border-color: transparent #252BD1 transparent transparent !important;
+}
+.success-story-icon-content{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  padding: 0 25px;
+  background: #1A1E8D1A;
+}
+.success-story-title-icon{
+  font-size: 22px;
+  background: linear-gradient(121deg, #252BD1 1.87%, rgba(26, 30, 141, 0.61) 79.6%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.35;
+}
+.active > .success-story-menu > .success-story-icon-content > .success-story-title-icon,
+.success-story-tab-link:hover > .success-story-menu > .success-story-icon-content > .success-story-title-icon{
+  opacity: 1;
+}
+.success-story-title{
+  margin-left: 18px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Philosopher';
+  background: linear-gradient(121deg, #252BD1 1.87%, rgba(26, 30, 141, 0.61) 79.6%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.35;
+
+}
+.active > .success-story-menu > .success-story-title,
+.success-story-tab-link:hover > .success-story-menu > .success-story-title{
+  opacity: 1;
+}
+.success-story-content{
+  margin-left: 36px;
+}
+.success-story-content-title{
+  margin-bottom: 25px;
+  font-weight: 700;
+  background: linear-gradient(121deg, #252BD1 1.87%, rgba(26, 30, 141, 0.61) 79.6%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.success-story-content-subtitle{
+  margin-bottom: 0;
+}
+.success-story-content-desc{
+  color: #828282;
+}
+.success-story-content-img{
+  margin-left: 24px;
+  width: 343px;
+  height: 354px;
+  border-radius: 58.804px 0;
+}

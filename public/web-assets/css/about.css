@@ -1,0 +1,31 @@
+.about-us-video > .plyr {
+  border-radius: 53px;
+}
+.about-us-video > .plyr > .plyr__controls {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+.about-us-content {
+  margin-top: 27px;
+  padding: 36px 0px 36px 0px;
+}
+.about-us-content > p {
+  font-size: 20px;
+  margin-bottom: 50px;
+  text-align: justify;
+  font-weight: 400;
+}
+.plyr {
+  border-radius: 20px;
+}
+
+@media all and (max-width: 768px){
+  .about-us-content{
+    padding: 0;
+  }
+  .about-us-content > p{
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}

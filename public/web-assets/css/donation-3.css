@@ -1,0 +1,109 @@
+.page-title-special p {
+  font-size: 40px;
+  margin: 5px;
+}
+.page-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.donation {
+  padding: 20px;
+  background-color: rgb(240, 241, 245);
+  border-radius: 15px;
+  max-width: 414px;
+}
+
+.btn-campaign-category {
+  padding: 8px 24px;
+  margin: 0 10px;
+  gap: 8px;
+  border-radius: 35px;
+  color: #bdbdbd;
+  border: 1px solid #bdbdbd;
+}
+.campaign-btn-container input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+.btn-campaign-category:hover,
+.campaign-btn-container input[type="radio"]:checked + .btn-campaign-category {
+  background: #1a1e8d;
+  color: #fff;
+}
+
+.donation .campaign-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  color: black;
+  text-align: center;
+  gap: 18px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donation .campaign-info img {
+  width: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  max-width: 350px;
+}
+
+.donation .campaign-info div {
+  width: 65%;
+}
+.amount input {
+  padding-left: 20px;
+  padding-right: 10px;
+  font-size: 15px;
+  transition: all 0.5s ease;
+}
+.amount input:focus {
+  /* padding-right: 30px; */
+  /* font-size: 16px; */
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.amount span {
+  font-weight: 600;
+  width: 160px;
+  letter-spacing: 1px;
+}
+.payment div {
+  padding: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.payment div label {
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+.donate-button {
+  width: 100%;
+  color: #fff;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  display: inline-flex;
+  padding: 14px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  background: linear-gradient(121deg, #252bd1 1.87%, #0e127c 79.6%);
+}
+.donate-button:hover {
+  background: #fff;
+  color: #1a1e8d;
+  border: 1px solid #1a1e8d;
+}
+
+@media all and (max-width: 992px) {
+  .amount input {
+    width: 100% !important;
+  }
+}

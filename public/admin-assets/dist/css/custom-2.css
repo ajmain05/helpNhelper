@@ -1,0 +1,43 @@
+.nav-sidebar .nav-treeview > li.nav-item {
+  margin-left: 0.5rem;
+}
+.sidebar-collapse
+  > div.wrapper
+  > aside.main-sidebar
+  > a.brand-link
+  > img.custom-logo {
+  width: 80%;
+}
+.sidebar-mini .main-sidebar .nav-link,
+.sidebar-mini-md .main-sidebar .nav-link,
+.sidebar-mini-xs .main-sidebar .nav-link {
+  width: auto !important;
+}
+
+/* Admin sidebar */
+
+.admin-sidebar {
+  width: 270px;
+}
+.admin-content-wrapper .content-wrapper,
+.admin-header,
+.admin-footer {
+  margin-left: 270px !important;
+}
+@media all and (max-width: 992px) {
+  .admin-content-wrapper .content-wrapper,
+  .admin-header,
+  .admin-footer {
+    margin-left: 0 !important;
+  }
+  .sidebar-collapse .main-sidebar, .sidebar-collapse .main-sidebar::before{
+    margin-left: -270px !important;
+  }
+}
+
+
+/* Table image size */
+
+.content img{
+  width: 100px;
+}

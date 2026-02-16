@@ -1,0 +1,137 @@
+.heading {
+  padding: 10px;
+  margin-top: 10px;
+}
+.page-title {
+  font-size: 50px;
+}
+.campaign-body {
+  padding-bottom: 100px;
+}
+.campaign-image {
+  position: relative;
+}
+.campaign-image img {
+  width: 100%;
+  border-radius: 25px;
+  height: 400px;
+  object-fit: cover;
+}
+.campaign-image h1 {
+  top: 20px;
+  right: 20px;
+  color: white;
+  position: absolute;
+  font-size: 75px;
+}
+
+.created {
+  margin-top: 20px;
+  padding: 10px 10px;
+  border-top: 1px solid rgb(52, 52, 52);
+  border-bottom: 1px solid rgb(52, 52, 52);
+}
+
+.created span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.description {
+  margin-top: 20px;
+  padding: 10px 10px;
+}
+
+.button {
+  display: flex;
+  justify-content: space-between;
+}
+.button a {
+  padding: 12px 120px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  background: #1a1e8d;
+  color: white !important;
+  font-size: 20px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+.button a:hover {
+  color: #252bd1 !important;
+  background: white;
+  border: 2px solid #252bd1;
+}
+.donation-box {
+  padding: 20px;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 5px 5px 17px #7888a676;
+}
+.donation-box .tk {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.donation-box .tk span {
+  font-size: 20px;
+  color: #252bd1;
+}
+.donation-box .progress {
+  border-radius: 10px;
+  height: 10px;
+}
+.donation-box .donations {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+.percentage {
+  position: relative;
+  padding: 5px;
+  background-color: #252bd1;
+  color: white;
+  /* border-radius: 10px; */
+  bottom: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+/* .percentage::before {
+  content: "";
+  position: absolute;
+  border-top: solid 10px #252bd1;
+  border-left: solid 10px transparent;
+  border-right: solid 10px transparent;
+  border-radius: 10px;
+  top: 21px;
+  left: 7px;
+} */
+
+.donation-box .donate-button {
+  width: 100%;
+  display: flex;
+  padding: 8px 0px !important;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  background: #1a1e8d;
+  color: white !important;
+  font-size: 20px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+.donation-box .donate-button:hover {
+  color: #252bd1 !important;
+  background: white;
+  border: 2px solid #252bd1;
+}
+.description img {
+  height: 400px;
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+}

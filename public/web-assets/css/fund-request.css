@@ -1,0 +1,40 @@
+.label {
+  font-weight: bold;
+}
+
+.fund-request-content {
+  padding: 110px 150px;
+  background: #f7f7fb;
+  border-radius: 20px;
+  margin-bottom: 60px;
+}
+.fund-request-content input[type="text"],
+.fund-request-content input[type="number"],
+.fund-request-content input[type="email"],
+.fund-request-content input[type="password"],
+.fund-request-content .select2-container--default .select2-selection--single,
+.fund-request-content textarea {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  border-bottom: 1px solid #a4a5a5;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.fund-request-content input[type="checkbox"] {
+  accent-color: #000;
+}
+.fund-request-content .submit-btn {
+  margin-top: 20px;
+  min-width: 114px;
+  padding: 10px;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(121deg, #252bd1 1.87%, #0e127c 79.6%);
+}
+.fund-request-content .submit-btn:hover {
+  background: #fff;
+  color: #252bd1;
+  border: 1px solid #252bd1;
+}
