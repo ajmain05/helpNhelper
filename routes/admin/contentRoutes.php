@@ -38,4 +38,8 @@ Route::group([
     // generic page content (terms, cookies)
     Route::get('/page-content/{type}', [PageContentController::class, 'index'])->name('page-content.index');
     Route::post('/page-content/{type}', [PageContentController::class, 'update'])->name('page-content.update');
+
+    // signup tutorials
+    Route::get('/signup-tutorials', [\App\Http\Controllers\Admin\Content\SignupTutorialController::class, 'index'])->name('signup-tutorials.index');
+    Route::post('/signup-tutorials', [\App\Http\Controllers\Admin\Content\SignupTutorialController::class, 'store'])->name('signup-tutorials.store');
 });

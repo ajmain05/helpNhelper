@@ -1,35 +1,28 @@
 @php
-    $desc = __('about_us_content');
-    if ($desc === 'about_us_content') {
-        $desc = __($description);
-    }
-    $paragraphs = explode("\n", $desc);
+    $image = $image1 ?? 'web-assets/images/about-us-1.png';
+    // Split description into paragraphs if it's not empty
+    $paragraphs = !empty($description) ? explode("\n", $description) : [];
 @endphp
+
 <div class="custom-container">
-    <div class="flex justify-between gap-10 mb-5 flex-col xl:flex-row">
-        <div class="flex w-full xl:w-1/2 overflow-hidden rounded-2xl items-start">
-            <img src="{{ asset($image1 ?? 'web-assets/images/about-us-1.png') }}" alt="About Us" class="w-full">
+    <div class="flex gap-10 flex-col xl:flex-row">
+        {{-- Left: Tall Image --}}
+        <div class="w-full xl:w-2/5 flex-shrink-0 overflow-hidden rounded-2xl">
+            <img src="{{ asset($image) }}" alt="About Us"
+                class="w-full h-full object-cover">
         </div>
-        <div class="flex w-full xl:w-1/2  flex-col">
-            <h3 class="text-4xl font-semibold tracking-[0] text-white mb-8">{{ __($title ?? 'We are here to help you!') }}
+        {{-- Right: Title + All content --}}
+        <div class="flex w-full xl:w-3/5 flex-col">
+            <h3 class="text-4xl font-semibold tracking-[0] text-white mb-8">
+                {{ $title }}
             </h3>
-            @if (!empty($paragraphs))
-                <p class="text-white text-[20px] font-semibold leading-[35px] tracking-[0] mb-4">
-                    {!! html_entity_decode($paragraphs[0]) !!}</p>
-            @endif
-        </div>
-    </div>
-    @if (count($paragraphs) > 1)
-        <p class="text-white text-[20px] font-semibold leading-[35px] tracking-[0] mb-10"> {!! html_entity_decode($paragraphs[1]) !!}
-        </p>
-    @endif
-    @if (count($paragraphs) > 2)
-        <div class="flex justify-between gap-4 flex-col xl:flex-row">
-            <p class="text-white text-[20px] font-semibold leading-[35px] tracking-[0] w-full xl:w-3/5">
-                {!! html_entity_decode($paragraphs[2]) !!}</p>
-            <div class="flex overflow-hidden rounded-2xl w-full xl:w-2/5">
-                <img src="{{ asset($image2 ?? 'web-assets/images/about-us-2.png') }}" alt="About Us" class="w-full">
+            <div class="text-white text-[18px] font-semibold leading-[34px] tracking-[0] space-y-4">
+                @foreach ($paragraphs as $para)
+                    @if (trim($para))
+                        <p>{!! nl2br(e($para)) !!}</p>
+                    @endif
+                @endforeach
             </div>
         </div>
-    @endif
+    </div>
 </div>

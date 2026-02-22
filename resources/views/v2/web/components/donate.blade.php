@@ -7,7 +7,7 @@
         <div class="w-full xl:w-1/2 flex flex-col">
             <h3
                 class="text-[25px] xl:text-[45px] font-bold leading-[30px] xl:leading-[55px] tracking-[0] text-[#101828] mb-10">
-                Give a little, Change a lot your donation makes a difference!</h3>
+                {{ __('Give a little, Change a lot your donation makes a difference') }}!</h3>
             <fieldset class="flex gap-6 mb-9 flex-wrap">
                 <legend class="sr-only">Color</legend>
 
@@ -51,7 +51,7 @@
 
                         <p
                             class="bg-transparent text-black group-has-[:checked]:text-white rounded-full text-lg font-medium leading-7 tracking-normal">
-                            Custom</p>
+                            {{ __('Custom') }}</p>
                     </label>
                 </div>
 
@@ -67,7 +67,7 @@
                     </span>
                 </a>
             </div>
-            <h4 class="text-[44px] font-medium leading-[71px] tracking-[0] text-[#101828] mb-4">Successful Donners</h4>
+            <h4 class="text-[44px] font-medium leading-[71px] tracking-[0] text-[#101828] mb-4">{{ __('Successful Donors') }}</h4>
             <img src="{{ asset('web-assets/images/donor_image.png') }}" alt="Donate Image" class="w-fit">
         </div>
     </div>

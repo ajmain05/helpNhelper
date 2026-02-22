@@ -28,9 +28,12 @@ class AboutUsController extends Controller
     {
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'title_bn' => ['nullable', 'string', 'max:255'],
+            'title_ar' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string'],
+            'description_bn' => ['nullable', 'string'],
+            'description_ar' => ['nullable', 'string'],
             'image_1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'image_2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ]);
 
         $about = Content::firstOrCreate([
@@ -38,18 +41,16 @@ class AboutUsController extends Controller
         ]);
 
         $about->title = $request->title;
+        $about->title_bn = $request->title_bn;
+        $about->title_ar = $request->title_ar;
         $about->description = $request->description;
+        $about->description_bn = $request->description_bn;
+        $about->description_ar = $request->description_ar;
         if (isset($request->image_1)) {
             $this->removeFile($about->image_1);
 
             $image = $this->storeFile('content/about-us', $request->image_1, 'about');
             $about->image_1 = $image;
-        }
-        if (isset($request->image_2)) {
-            $this->removeFile($about->image_2);
-
-            $image = $this->storeFile('content/about-us', $request->image_2, 'about');
-            $about->image_2 = $image;
         }
         $about->save();
 

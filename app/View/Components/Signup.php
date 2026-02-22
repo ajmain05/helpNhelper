@@ -21,7 +21,20 @@ class Signup extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('v2.web.components.signup', ['countries' => $this->countries, 'divisions' => $this->divisions, 'districts' => $this->districts, 'upazilas' => $this->upazilas]);
+        $tutorials = \App\Models\Content::whereIn('type', [
+            \App\Enums\Content\ContentType::SignupTutorialVolunteer->value,
+            \App\Enums\Content\ContentType::SignupTutorialSeeker->value,
+            \App\Enums\Content\ContentType::SignupTutorialDonor->value,
+            \App\Enums\Content\ContentType::SignupTutorialCorporateDonor->value,
+            \App\Enums\Content\ContentType::SignupTutorialOrganization->value,
+        ])->get()->pluck('embed', 'type');
 
+        return view('v2.web.components.signup', [
+            'countries' => $this->countries,
+            'divisions' => $this->divisions,
+            'districts' => $this->districts,
+            'upazilas' => $this->upazilas,
+            'tutorials' => $tutorials
+        ]);
     }
 }

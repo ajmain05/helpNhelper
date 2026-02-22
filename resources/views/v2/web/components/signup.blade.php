@@ -102,12 +102,69 @@
                             <span>{{ __('Seeker') }}</span>
                             {{ __('Account') }}
                         </h3>
+                        @php
+                            $tutorial_keys = [
+                                'volunteer' => \App\Enums\Content\ContentType::SignupTutorialVolunteer->value,
+                                'seeker' => \App\Enums\Content\ContentType::SignupTutorialSeeker->value,
+                                'donor' => \App\Enums\Content\ContentType::SignupTutorialDonor->value,
+                                'corporate-donor' => \App\Enums\Content\ContentType::SignupTutorialCorporateDonor->value,
+                                'organization' => \App\Enums\Content\ContentType::SignupTutorialOrganization->value,
+                            ];
+                        @endphp
+                        <div id="signup-tutorial-container" class="hidden">
+                            <a id="signup-tutorial-link" href="#" target="_blank" class="flex items-center gap-2 bg-gradient-to-r from-[#27E36A] to-[#059669] hover:from-[#059669] hover:to-[#27E36A] text-white px-6 py-3 rounded-full shadow-[0_4px_15px_rgba(39,227,106,0.3)] transition-all duration-500 transform hover:scale-105 active:scale-95">
+                                <i class="far fa-file-pdf text-white text-xl"></i>
+                                <span class="text-base font-bold whitespace-nowrap">{{ __('Signup Tutorial') }}</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="w-full flex flex-col xl:flex-row justify-between items-center gap-2">
                         <h4
                             class="text-[20px] xl:text-[32px] text-white font-medium leading-[1.1] xl:leading-[24px] tracking-normal text-center xl:text-left">
                             {{ __('Personal Information') }}</h4>
-                        <x-step-bar :step="4" :position="1"></x-step-bar>
+                        <div class="flex items-center gap-4">
+                            <x-step-bar :step="4" :position="1"></x-step-bar>
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const tutorials = @json($tutorials);
+                                const tutorialKeys = @json($tutorial_keys);
+                                const container = document.getElementById('signup-tutorial-container');
+                                const link = document.getElementById('signup-tutorial-link');
+                                
+                                function updateTutorialLink() {
+                                    const role = document.querySelector('input[name="type"]:checked')?.value;
+                                    const roleTutorial = (role && tutorialKeys[role]) ? tutorials[tutorialKeys[role]] : null;
+                                    
+                                    if (roleTutorial) {
+                                        const fullUrl = '{{ asset("") }}' + roleTutorial;
+                                        // Update Step 2 link
+                                        if (link) {
+                                            link.href = fullUrl;
+                                            container.classList.remove('hidden');
+                                        }
+                                        // Update other steps links
+                                        document.querySelectorAll('.signup-tutorial-link-global').forEach(el => {
+                                            el.href = fullUrl;
+                                        });
+                                        document.querySelectorAll('.signup-tutorial-container-global').forEach(el => {
+                                            el.classList.remove('hidden');
+                                        });
+                                    } else {
+                                        if (container) container.classList.add('hidden');
+                                        document.querySelectorAll('.signup-tutorial-container-global').forEach(el => {
+                                            el.classList.add('hidden');
+                                        });
+                                    }
+                                }
+
+                                // Update on load and when role changes
+                                updateTutorialLink();
+                                document.querySelectorAll('input[name="type"]').forEach(input => {
+                                    input.addEventListener('change', updateTutorialLink);
+                                });
+                            });
+                        </script>
                     </div>
                     <div class="w-full flex flex-col mt-10 gap-7">
                         <div class="flex">
@@ -219,6 +276,12 @@
                             <span>Seeker</span>
                             Account
                         </h3>
+                        <div class="signup-tutorial-container-global hidden">
+                            <a href="#" target="_blank" class="signup-tutorial-link-global flex items-center gap-2 bg-gradient-to-r from-[#27E36A] to-[#059669] hover:from-[#059669] hover:to-[#27E36A] text-white px-6 py-3 rounded-full shadow-[0_4px_15px_rgba(39,227,106,0.3)] transition-all duration-500 transform hover:scale-105 active:scale-95">
+                                <i class="far fa-file-pdf text-white text-xl"></i>
+                                <span class="text-base font-bold whitespace-nowrap">{{ __('Signup Tutorial') }}</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="w-full flex flex-col xl:flex-row justify-between items-center gap-2">
                         <h4
@@ -286,6 +349,12 @@
                             <span>Seeker</span>
                             Account
                         </h3>
+                        <div class="signup-tutorial-container-global hidden">
+                            <a href="#" target="_blank" class="signup-tutorial-link-global flex items-center gap-2 bg-gradient-to-r from-[#27E36A] to-[#059669] hover:from-[#059669] hover:to-[#27E36A] text-white px-6 py-3 rounded-full shadow-[0_4px_15px_rgba(39,227,106,0.3)] transition-all duration-500 transform hover:scale-105 active:scale-95">
+                                <i class="far fa-file-pdf text-white text-xl"></i>
+                                <span class="text-base font-bold whitespace-nowrap">{{ __('Signup Tutorial') }}</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="w-full flex flex-col xl:flex-row justify-between items-center gap-2 mb-10">
                         <h4
@@ -413,6 +482,12 @@
                             <span>Seeker</span>
                             Account
                         </h3>
+                        <div class="signup-tutorial-container-global hidden">
+                            <a href="#" target="_blank" class="signup-tutorial-link-global flex items-center gap-2 bg-gradient-to-r from-[#27E36A] to-[#059669] hover:from-[#059669] hover:to-[#27E36A] text-white px-6 py-3 rounded-full shadow-[0_4px_15px_rgba(39,227,106,0.3)] transition-all duration-500 transform hover:scale-105 active:scale-95">
+                                <i class="far fa-file-pdf text-white text-xl"></i>
+                                <span class="text-base font-bold whitespace-nowrap">{{ __('Signup Tutorial') }}</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="w-full flex flex-col xl:flex-row justify-between items-center gap-2 mb-10">
                         <h4

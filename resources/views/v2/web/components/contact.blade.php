@@ -10,8 +10,7 @@
                         {{ __('Address') }}</h4>
                     <p
                         class="text-white text-[16px] xl:text-[24px] font-medium leading-[20px] xl:leading-[33px] tracking-[0] mb-5">
-                        Golam Ali Nazir Para,
-                        Chandgaon, Chittagong 4212, Bangladesh.</p>
+                        {{ __('Golam Ali Nazir Para, Chandgaon, Chittagong 4212, Bangladesh.') }}</p>
                     <div class="flex gap-2 mb-3">
                         <span class="flex">
                             <img src="{{ asset('web-assets/icons/call.svg') }}" alt="Call Icon"

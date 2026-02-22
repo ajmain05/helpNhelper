@@ -11,8 +11,16 @@ class AboutUs extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $title = null, public $description = null, public $image1 = null, public $image2 = null)
-    {
+    public function __construct(
+        public $title = null,
+        public $title_bn = null,
+        public $title_ar = null,
+        public $description = null,
+        public $description_bn = null,
+        public $description_ar = null,
+        public $image1 = null,
+        public $image2 = null
+    ) {
         //
     }
 

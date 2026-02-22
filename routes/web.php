@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/admin/translations', [App\Http\Controllers\Admin\TranslationController::class, 'index'])->name('admin.translation.index');
         Route::post('/admin/translations/update', [App\Http\Controllers\Admin\TranslationController::class, 'update'])->name('admin.translation.update');
+        Route::delete('/admin/translations/destroy', [App\Http\Controllers\Admin\TranslationController::class, 'destroy'])->name('admin.translation.destroy');
     });
 
 });

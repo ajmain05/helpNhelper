@@ -514,6 +514,17 @@
                                 <p>Cookie Preferences</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.contents.signup-tutorials.index') }}"
+                                class="nav-link @if (str_contains(URL::current(), 'admin/contents/signup-tutorials')) active @endif">
+                                @if (str_contains(URL::current(), 'admin/contents/signup-tutorials'))
+                                    <i class="far fa-dot-circle nav-icon"></i>
+                                @else
+                                    <i class="far fa-circle nav-icon"></i>
+                                @endif
+                                <p>Signup Tutorials</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @can('all-user')

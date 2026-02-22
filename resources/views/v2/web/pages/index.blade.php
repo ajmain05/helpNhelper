@@ -1,5 +1,5 @@
 @php
-    $heroSectionTitle = 'We Need Your Powerful Hands To Change The World';
+    $heroSectionTitle = __('home_hero_title');
     $bgImage = asset('web-assets/v2-images/home/1st home page cover.jpg');
 @endphp
 <x-web-layout>

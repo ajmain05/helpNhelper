@@ -66,7 +66,7 @@
                     <!-- Dropdown Menu -->
                     <div id="desktop-lang-menu" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl py-2 hidden z-50 border border-gray-100 overflow-hidden transform transition-all duration-200 origin-top-right">
                         @foreach(\App\Models\Language::where('status', 1)->get() as $lang)
-                            <a href="{{ route('home', ['lang' => $lang->code]) }}" class="block px-5 py-3 hover:bg-green-50 flex items-center gap-3 text-gray-700 transition-colors border-b last:border-0 border-gray-50">
+                            <a href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['lang' => $lang->code])) }}" class="block px-5 py-3 hover:bg-green-50 flex items-center gap-3 text-gray-700 transition-colors border-b last:border-0 border-gray-50">
                                 @if(isset($flags[$lang->code]))
                                     {!! $flags[$lang->code] !!}
                                 @endif
@@ -125,7 +125,7 @@
                 <div class="flex xl:hidden flex-col gap-2 mt-4">
                     <span class="text-sm text-gray-400">{{ __('Language') }}</span>
                     @foreach(\App\Models\Language::where('status', 1)->get() as $lang)
-                        <a href="{{ route('home', ['lang' => $lang->code]) }}" class="flex items-center gap-2 text-white hover:text-[#27e36a]">
+                        <a href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['lang' => $lang->code])) }}" class="flex items-center gap-2 text-white hover:text-[#27e36a]">
                             <i class="{{ $lang->icon }}"></i> {{ $lang->name }}
                         </a>
                     @endforeach

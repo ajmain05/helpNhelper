@@ -17,4 +17,11 @@ enum ContentType: string
     // about use page
     case About = 'about';
 
+    // signup tutorial
+    case SignupTutorialVolunteer = 'signup-tutorial-volunteer';
+    case SignupTutorialSeeker = 'signup-tutorial-seeker';
+    case SignupTutorialDonor = 'signup-tutorial-donor';
+    case SignupTutorialCorporateDonor = 'signup-tutorial-corporate-donor';
+    case SignupTutorialOrganization = 'signup-tutorial-organization';
+
 }

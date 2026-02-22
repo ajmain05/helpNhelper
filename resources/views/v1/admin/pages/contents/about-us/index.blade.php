@@ -49,49 +49,70 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="px-4">
-                                    <div class="form-group">
-                                        <label for="title">Title</label>
-                                        <input type="text" class="form-control" id="title" name="title"
-                                            placeholder="Enter title" value="{{ $about?->title }}">
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="form-group d-flex">
-                                            <div>
-                                                <label for="image_1">Left Image(1:1)</label>
-                                                <input type="file" class="form-control" accept="image/*" id="image_1"
-                                                    name="image_1">
+                                    <div class="px-4">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="title">Title [EN]</label>
+                                                    <input type="text" class="form-control" id="title" name="title"
+                                                        placeholder="Enter title" value="{{ $about?->title }}">
+                                                </div>
                                             </div>
-                                            <div class="ml-3">
-                                                @if ($about?->image_1)
-                                                    <img src="{{ asset($about->image_1) }}" alt="team-photo"
-                                                        class="img-fluid rounded"
-                                                        style="width: auto; height: 80px; object-fit: cover;">
-                                                @endif
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="title_bn">Title [BN]</label>
+                                                    <input type="text" class="form-control" id="title_bn" name="title_bn"
+                                                        placeholder="Enter title in Bengali" value="{{ $about?->title_bn }}">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group d-flex gap-3">
-                                            <div>
-                                                <label for="image_2">Right Image(1:1)</label>
-                                                <input type="file" class="form-control" accept="image/*" id="image_2"
-                                                    name="image_2">
-                                            </div>
-                                            <div class="ml-3">
-                                                @if ($about?->image_2)
-                                                    <img src="{{ asset($about->image_2) }}" alt="team-photo"
-                                                        class="img-fluid rounded"
-                                                        style="width: auto; height: 80px; object-fit: cover;">
-                                                @endif
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="title_ar">Title [AR]</label>
+                                                    <input type="text" class="form-control" id="title_ar" name="title_ar"
+                                                        placeholder="Enter title in Arabic" value="{{ $about?->title_ar }}">
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <div class="form-group d-flex">
+                                                <div>
+                                                    <label for="image_1">About Image (1:1)</label>
+                                                    <input type="file" class="form-control" accept="image/*" id="image_1"
+                                                        name="image_1">
+                                                </div>
+                                                <div class="ml-3">
+                                                    @if ($about?->image_1)
+                                                        <img src="{{ asset($about->image_1) }}" alt="about-photo"
+                                                            class="img-fluid rounded"
+                                                            style="width: auto; height: 80px; object-fit: cover;">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Description [EN]</label>
+                                                    <textarea name="description" rows="5" class="form-control">{{ $about?->description }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Description [BN]</label>
+                                                    <textarea name="description_bn" rows="5" class="form-control">{{ $about?->description_bn }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Description [AR]</label>
+                                                    <textarea name="description_ar" rows="5" class="form-control">{{ $about?->description_ar }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <small class="form-text text-muted mb-4">Press Enter to separate each section (maximum 3 sections).</small>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="">Description</label>
-                                        <textarea name="description" rows="3" class="form-control">{{ $about?->description }}</textarea>
-                                        <small class="form-text text-muted">Press Enter to separate each section (maximum 3
-                                            sections).</small>
-                                    </div>
-                                </div>
                             </form>
                         </div><!-- /.card -->
                     </div>

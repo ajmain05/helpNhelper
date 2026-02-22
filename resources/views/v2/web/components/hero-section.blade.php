@@ -88,7 +88,7 @@
         style="background-image: url('{{ $bgImage }}');">
         <div class="custom-container mx-auto flex flex-col items-center">
             <h1 class="hero-heading text-white text-center max-w-[560px] xl:max-w-[900px]">
-                {{ $title }}</h1>
+                {{ __($title) }}</h1>
         </div>
     </div>
 @elseif ($type == 3)
@@ -114,7 +114,7 @@
             </div>
             <div class="">
                 <h1 class="hero-heading text-white text-center max-w-[560px] xl:max-w-[900px] mb-10">
-                    {{ $title }}</h1>
+                    {{ __($title) }}</h1>
                 <div class="w-full flex justify-between items-center text-white text-lg mx-auto">
                     <div class="flex items-center space-x-2">
                         <img src="{{ asset('web-assets/icons/love.svg') }}" alt="Supporters Icon" class="w-6 h-6">
