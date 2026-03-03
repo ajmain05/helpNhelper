@@ -27,7 +27,7 @@ class TeamMemberController extends Controller
                     'designation' => $member->designation,
                     'institution' => $member->institution,
                     'message'     => $member->message,
-                    'photo'       => $member->image ? asset('storage/' . $member->image) : null,
+                    'photo'       => $member->image ? asset($member->image) : null,
                     'type'        => $member->type,
                     'sequence'    => $member->sequence,
                 ];
