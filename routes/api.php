@@ -23,4 +23,6 @@ Route::group(['prefix' => 'v1'], function () {
     require_once __DIR__.'/api/v1/transaction.php';
     require_once __DIR__.'/api/v1/user.php';
     require_once __DIR__.'/api/v1/team.php';
+    require_once __DIR__.'/api/v1/stats.php';
+    require_once __DIR__.'/api/v1/faq.php';
 });
