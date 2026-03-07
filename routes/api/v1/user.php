@@ -7,4 +7,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user-info', [UserController::class, 'index']);
     Route::get('user-history', [UserController::class, 'history']);
     Route::post('volunteer-investigate-document/{seekerApplicationId}', [UserController::class, 'investigateDocument']);
+    Route::post('update-profile', [UserController::class, 'updateProfile']);
 });

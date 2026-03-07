@@ -154,4 +154,55 @@ class UserController extends Controller
             );
         }
     }
+
+    /**
+     * Update the authenticated user's profile (name, mobile, photo).
+     * Called via POST /api/v1/update-profile (multipart/form-data).
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'   => ['nullable', 'string', 'max:255'],
+            'mobile' => ['nullable', 'string', 'max:20'],
+            'photo'  => ['nullable', 'image', 'max:4096'],
+        ]);
+
+        try {
+            $user = Auth::user();
+
+            if ($request->filled('name')) {
+                $user->name = $request->name;
+            }
+
+            if ($request->filled('mobile')) {
+                $user->mobile = $request->mobile;
+            }
+
+            if ($request->hasFile('photo')) {
+                $filePath = $this->storeFile('profiles', $request->file('photo'), 'Profile');
+                $user->photo = $filePath;
+            }
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'Profile updated successfully.',
+                'user'    => [
+                    'id'     => $user->id,
+                    'name'   => $user->name,
+                    'email'  => $user->email,
+                    'mobile' => $user->mobile,
+                    'photo'  => $user->photo ? asset($user->photo) : null,
+                    'type'   => $user->type,
+                    'status' => $user->status,
+                ],
+            ], Response::HTTP_OK);
+
+        } catch (\Throwable $th) {
+            return new JsonResponse(
+                ['message' => $th->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 }
