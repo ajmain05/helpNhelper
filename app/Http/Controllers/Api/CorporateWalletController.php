@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Campaign\Campaign;
 use App\Models\CorporateAllocation;
+use App\Models\CorporateDeposit;
 use App\Models\CorporateWallet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class CorporateWalletController extends Controller
@@ -81,6 +83,16 @@ class CorporateWalletController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        // 1. Record the manual offline deposit
+        $deposit = CorporateDeposit::create([
+            'user_id' => $user->id,
+            'amount' => $request->amount,
+            'method' => 'offline',
+            'transaction_id' => 'OFFLINE-' . strtoupper(Str::random(10)),
+            'status' => 'completed',
+        ]);
+
+        // 2. Add to wallet balance
         $wallet = CorporateWallet::firstOrCreate(
             ['user_id' => $user->id],
             ['total_deposited' => 0, 'balance' => 0]
@@ -92,7 +104,8 @@ class CorporateWalletController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Deposit recorded successfully.',
+            'message' => 'Offline deposit recorded successfully.',
+            'deposit' => $deposit,
             'wallet' => $wallet,
         ]);
     }
