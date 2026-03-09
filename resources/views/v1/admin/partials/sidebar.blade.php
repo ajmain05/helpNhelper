@@ -51,8 +51,8 @@
                     </li>
                 @endcan
                 @can('all-donor')
-                    <li class="nav-item @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/user-requests/donors')) menu-open @endif">
-                        <a href="#" class="nav-link @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/user-requests/donors')) active @endif">
+                    <li class="nav-item @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) menu-open @endif">
+                        <a href="#" class="nav-link @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) active @endif">
                             <i class="nav-icon fas fa-hand-holding-usd"></i>
                             <p>
                                 Donor Information
@@ -82,8 +82,8 @@
                         </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('admin.donors.index') }}"
-                                    class="nav-link @if (str_contains(URL::current(), 'admin/donors')) active @endif">
-                                    @if (str_contains(URL::current(), 'admin/donors'))
+                                    class="nav-link @if (str_contains(URL::current(), 'admin/donors') && !str_contains(URL::current(), 'admin/corporate-donors')) active @endif">
+                                    @if (str_contains(URL::current(), 'admin/donors') && !str_contains(URL::current(), 'admin/corporate-donors'))
                                         <i class="far fa-dot-circle nav-icon"></i>
                                     @else
                                         <i class="far fa-circle nav-icon"></i>
@@ -91,12 +91,18 @@
                                     <p>Donor List</p>
                                 </a>
                             </li>
-                            {{-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Donation Categories</p>
-                            </a>
-                        </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.corporate-donors.index') }}"
+                                    class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors')) active @endif">
+                                    @if (str_contains(URL::current(), 'admin/corporate-donors'))
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i>
+                                    @endif
+                                    <p>Corporate Donors</p>
+                                </a>
+                            </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
