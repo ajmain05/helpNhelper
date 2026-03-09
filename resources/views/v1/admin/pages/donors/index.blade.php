@@ -60,6 +60,7 @@
                                                 <th>Type</th>
                                                 <th>Email</th>
                                                 <th>Mobile</th>
+                                                <th>Wallet Balance</th>
                                                 <th>Status</th>
                                                 <th>Creation Date & Time</th>
                                                 <th>Action</th>
@@ -78,6 +79,43 @@
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content -->
+
+        <!-- Deposit Modal -->
+        <div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form action="{{ route('admin.donor.deposit') }}" method="POST">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header bg-success">
+                            <h5 class="modal-title text-white">Deposit Cheque for <span id="depositDonorName"></span></h5>
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="user_id" id="depositUserId">
+                            
+                            <div class="form-group">
+                                <label>Amount (৳) <span class="text-danger">*</span></label>
+                                <input type="number" name="amount" class="form-control" required min="1" placeholder="e.g. 50000">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Cheque Number / Reference</label>
+                                <input type="text" name="cheque_number" class="form-control" placeholder="Optional. e.g. CHQ-987654321">
+                                <small class="text-muted">Will autogenerate if left blank.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Confirm Deposit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.Deposit Modal -->
+
     </div>
 @endsection
 
@@ -124,6 +162,12 @@
                 {
                     data: 'users.mobile',
                     name: 'users.mobile'
+                },
+                {
+                    data: 'wallet',
+                    name: 'wallet',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'status',
@@ -182,6 +226,12 @@
                     Swal.fire('Cancelled', 'Operation Cancelled', 'error');
                 }
             });
+        }
+
+        function openDepositModal(id, name) {
+            $('#depositUserId').val(id);
+            $('#depositDonorName').text(name);
+            $('#depositModal').modal('show');
         }
     </script>
 @endsection

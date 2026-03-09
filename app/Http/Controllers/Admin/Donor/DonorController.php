@@ -15,6 +15,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
+use App\Models\CorporateDeposit;
+use App\Models\CorporateWallet;
+use Illuminate\Support\Str;
 
 class DonorController extends Controller
 {
@@ -59,6 +62,7 @@ class DonorController extends Controller
                         ->orWhere('created_at', 'like', '%'.$request->search['value'].'%');
                 }
             })
+            ->with('corporateWallet')
             ->latest();
 
         // return Datatables::of($donors)
@@ -117,17 +121,27 @@ class DonorController extends Controller
 
                 return $markup;
             })
+            ->addColumn('wallet', function ($donor) {
+                if ($donor->type === Type::CorporateDonor->value) {
+                    return $donor->corporateWallet ? '৳ ' . number_format($donor->corporateWallet->balance, 2) : '৳ 0.00';
+                }
+                return '-';
+            })
             ->editColumn('created_at', function ($donor) {
                 return $donor->created_at ?? 'N/A';
             })
             ->addColumn('action', function ($donor) {
                 $markup = '';
+                if ($donor->type === Type::CorporateDonor->value) {
+                    $escapedName = htmlspecialchars($donor->name, ENT_QUOTES);
+                    $markup .= '<button onclick="openDepositModal('.$donor->id.', \''.$escapedName.'\')" class="btn btn-success m-1"><i class="fas fa-money-check-alt"></i> Deposit</button>';
+                }
                 $markup .= '<a href="'.route('admin.donor.edit', [$donor->id]).'" class="btn btn-secondary m-1">Edit</a>';
                 $markup .= '<a href="#" onclick="deleteDonor('.$donor->id.')" class="btn btn-danger m-1"> Delete</a>';
 
                 return $markup;
             })
-            ->rawColumns(['users.sid', 'action', 'users.name', 'users.photo', 'users.email', 'users.mobile', 'users.status', 'created_at'])
+            ->rawColumns(['users.sid', 'action', 'users.name', 'users.photo', 'users.email', 'users.mobile', 'users.status', 'wallet', 'created_at'])
             ->setFilteredRecords($donors->count())
             ->make(true);
     }
@@ -218,6 +232,52 @@ class DonorController extends Controller
             DB::rollBack();
 
             return new JsonResponse('Error Occurred! | '.$th->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Record a manual Cheque / Offline deposit from the Admin Panel.
+     */
+    public function recordDepositWeb(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:1',
+            'cheque_number' => 'nullable|string'
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($request->user_id);
+            
+            if ($user->type !== Type::CorporateDonor->value) {
+                return redirect()->back()->with('error', 'Only corporate donors have wallets.');
+            }
+
+            // Record offline deposit
+            CorporateDeposit::create([
+                'user_id' => $user->id,
+                'amount' => $request->amount,
+                'method' => 'offline',
+                'transaction_id' => $request->cheque_number ? 'CHQ-' . $request->cheque_number : 'OFFLINE-' . strtoupper(Str::random(10)),
+                'status' => 'completed',
+            ]);
+
+            // Add to wallet balance
+            $wallet = CorporateWallet::firstOrCreate(
+                ['user_id' => $user->id],
+                ['total_deposited' => 0, 'balance' => 0]
+            );
+
+            $wallet->total_deposited += $request->amount;
+            $wallet->balance += $request->amount;
+            $wallet->save();
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Cheque Deposit Recorded Successfully. ৳' . number_format($request->amount, 2) . ' added to wallet!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Error Occurred! | ' . $th->getMessage());
         }
     }
 }

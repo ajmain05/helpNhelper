@@ -13,6 +13,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['middleware' => ['permission:edit-donor']], function () {
             Route::get('edit/{id}', [DonorController::class, 'edit'])->name('admin.donor.edit');
             Route::post('update', [DonorController::class, 'update'])->name('admin.donor.update');
+            Route::post('deposit', [DonorController::class, 'recordDepositWeb'])->name('admin.donor.deposit');
         });
         Route::group(['middleware' => ['permission:delete-donor']], function () {
             Route::post('delete', [DonorController::class, 'destroy'])->name('admin.donor.delete');

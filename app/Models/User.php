@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Otp\Otp;
 use App\Models\Rating\UserRating;
+use App\Models\CorporateWallet;
 use App\Models\Seeker\Seeker;
 use App\Models\User\UserBank;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -85,5 +86,10 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
     public function ratings()
     {
         return $this->hasMany(UserRating::class);
+    }
+
+    public function corporateWallet()
+    {
+        return $this->hasOne(CorporateWallet::class);
     }
 }
