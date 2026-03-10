@@ -21,7 +21,7 @@ class CampaignController extends Controller
                 $q->where('category_id', $category);
             })->when($isFeatured == 1, function ($q) use ($isFeatured) {
                 $q->where('is_featured', $isFeatured);
-            })->withSum('donations as total_raised', 'amount')->latest()->get();
+            })->latest()->get();
 
             foreach ($campaigns as $campaign) {
                 $transaction = Transaction::where('campaign_id', $campaign->id)->where('type', 'income');

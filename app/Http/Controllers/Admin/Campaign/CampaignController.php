@@ -9,10 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank\BankAccount;
 use App\Models\Campaign\Campaign;
 use App\Models\Campaign\CampaignCategory;
-use App\Models\Campaign\CampaignImage;
 use App\Models\Invoice\Invoice;
 use App\Models\Seeker\SeekerApplication;
 use App\Models\Transaction\Transaction;
+use App\Models\CorporateAllocation;
+use App\Notifications\CampaignSuccessNotification;
 use App\Traits\HasFiles;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -381,6 +382,21 @@ class CampaignController extends Controller
                 $bankAccount = BankAccount::findOrFail(2);
                 $bankAccount->current_balance = $bankAccount->current_balance - $cutAmount;
                 $bankAccount->save();
+
+                // Notify Corporate Donors who allocated funds to this campaign
+                $corporateAllocations = CorporateAllocation::with('user')
+                                            ->where('campaign_id', $campaign->id)
+                                            ->get()
+                                            ->groupBy('user_id');
+                
+                foreach ($corporateAllocations as $userId => $allocations) {
+                    $totalAllocatedAmount = $allocations->sum('amount');
+                    $user = $allocations->first()->user;
+                    
+                    if ($user) {
+                        $user->notify(new CampaignSuccessNotification($campaign->title, $totalAllocatedAmount));
+                    }
+                }
             }
             $campaign->save();
             // if ($request->hasFile('images')) {

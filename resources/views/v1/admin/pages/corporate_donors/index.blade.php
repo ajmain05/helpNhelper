@@ -159,9 +159,15 @@ $(document).ready(function () {
                     flash('danger', res.message);
                 }
             },
-            error: function () {
+            error: function (xhr) {
                 $btn.prop('disabled', false).html('<i class="fas fa-coins mr-1"></i> Allocate & Notify');
-                flash('danger', 'An error occurred.');
+                var msg = 'An error occurred.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    msg = xhr.responseText.substring(0, 100) + '...';
+                }
+                flash('danger', msg);
             }
         });
     });
