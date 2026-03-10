@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\AllocationNotification;
+use App\Models\Transaction\Transaction;
+use App\Models\Invoice\Invoice;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CorporateDonorController extends Controller
 {
@@ -117,16 +121,42 @@ class CorporateDonorController extends Controller
                 'allocated_at' => now(),
             ]);
 
-            // 3. Update Campaign Goal/Raised (assuming structure is total_raised/amount_raised)
-            $campaign = Campaign::findOrFail($request->campaign_id);
-            if(isset($campaign->total_raised)) {
-                 $campaign->total_raised += $request->amount;
-            } elseif(isset($campaign->amount_raised)) {
-                 $campaign->amount_raised += $request->amount;
-            } else {
-                 $campaign->totalRaised += $request->amount;
-            }
-            $campaign->save();
+            // 3. Create Invoice & Transaction to credit the Campaign
+            $paymentDateTime = Carbon::now();
+
+            $invoice = Invoice::create([
+                'campaign_id' => $request->campaign_id,
+                'status' => 1,
+                'date' => $paymentDateTime,
+                'created_by' => Auth::id(),
+            ]);
+
+            $invoice->sid = 'IN-'.(100_000 + $invoice->id);
+            $invoice->save();
+
+            Transaction::create([
+                'receiver_type' => 'donor',
+                'date' => $paymentDateTime,
+                'amount' => $request->amount,
+                'remarks' => 'Corporate Allocation',
+                'status' => 1,
+                'type' => 'income',
+                'sub_type' => 'corporate_allocation',
+                'campaign_id' => $request->campaign_id,
+                'transaction_category_id' => null,
+                'transaction_mode_id' => null,
+                'bank_id' => 1, 
+                'bank_account_id' => 1,
+                'invoice_id' => $invoice->id,
+                'donor_id' => $donor->id,
+                'name' => $donor->name,
+                'mobile' => $donor->mobile,
+                'volunteer_id' => null,
+                'created_by' => Auth::id(),
+            ]);
+
+            // Campaign goal is satisfied implicitly since we record the Allocation. 
+            // The Campaign's total raised is evaluated virtually via transactions.
 
             DB::commit();
 
