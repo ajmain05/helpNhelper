@@ -34,9 +34,7 @@ class CorporateDonorController extends Controller
             $query->where('status', $request->status);
         }
 
-        $donors = $query->get();
-
-        return Datatables::of($donors)
+        return Datatables::of($query)
             ->addColumn('wallet', function ($row) {
                 $balance = $row->corporateWallet ? $row->corporateWallet->balance : 0;
                 return 'Tk ' . number_format($balance, 2);
