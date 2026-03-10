@@ -16,7 +16,13 @@ class CorporateDonorController extends Controller
 {
     public function index()
     {
-        $campaigns    = Campaign::where('status', 'approved')->get();
+        $campaigns = Campaign::where('status', 'ongoing')->get()->filter(function ($campaign) {
+            $totalRaised = \App\Models\Transaction\Transaction::where('campaign_id', $campaign->id)
+                            ->where('type', 'income')
+                            ->sum('amount');
+            return $totalRaised < $campaign->amount;
+        })->values();
+
         $pendingCount = User::where('type', 'corporate-donor')->where('status', 'pending')->count();
         return view('v1.admin.pages.corporate_donors.index', compact('campaigns', 'pendingCount'));
     }
