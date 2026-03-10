@@ -141,7 +141,7 @@ class CorporateDonorController extends Controller
                 'remarks' => 'Corporate Allocation',
                 'status' => 1,
                 'type' => 'income',
-                'sub_type' => 'corporate_allocation',
+                'sub_type' => 'digital',
                 'campaign_id' => $request->campaign_id,
                 'transaction_category_id' => null,
                 'transaction_mode_id' => null,
