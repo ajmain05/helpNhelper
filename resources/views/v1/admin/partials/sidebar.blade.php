@@ -5,7 +5,8 @@
         ->groupBy('type')
         ->pluck('total', 'type');
 
-    $pendingDonor = ($pendingCounts['donor'] ?? 0) + ($pendingCounts['corporate-donor'] ?? 0);
+    $pendingDonor = $pendingCounts['donor'] ?? 0;
+    $pendingCorporateDonor = $pendingCounts['corporate-donor'] ?? 0;
     $pendingVolunteer = $pendingCounts['volunteer'] ?? 0;
     $pendingSeeker = $pendingCounts['seeker'] ?? 0;
     $pendingOrganization = $pendingCounts['organization'] ?? 0;
@@ -51,8 +52,8 @@
                     </li>
                 @endcan
                 @can('all-donor')
-                    <li class="nav-item @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) menu-open @endif">
-                        <a href="#" class="nav-link @if (str_contains(URL::current(), 'admin/donors') || str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) active @endif">
+                    <li class="nav-item @if (str_contains(URL::current(), 'admin/donors') && !str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) menu-open @endif">
+                        <a href="#" class="nav-link @if (str_contains(URL::current(), 'admin/donors') && !str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/user-requests/donors')) active @endif">
                             <i class="nav-icon fas fa-hand-holding-usd"></i>
                             <p>
                                 Donor Information
@@ -92,6 +93,29 @@
                                 </a>
                             </li>
 
+                            </li>
+                            {{-- <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Donations</p>
+                                </a>
+                            </li> --}}
+                        </ul>
+                    </li>
+                @endcan
+
+                {{-- ─── Corporate Donors (dedicated section) ─────────── --}}
+                @can('all-donor')
+                    <li class="nav-item @if (str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/cheque-deposits')) menu-open @endif">
+                        <a href="#" class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors') || str_contains(URL::current(), 'admin/cheque-deposits')) active @endif">
+                            <i class="nav-icon fas fa-building"></i>
+                            <p>
+                                Corporate Donors
+                                <span class="badge badge-pill badge-warning">{{ $pendingCorporateDonor ?? 0 }}</span>
+                            </p>
+                            <i class="right fas fa-angle-left"></i>
+                        </a>
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ route('admin.corporate-donors.index') }}"
                                     class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors')) active @endif">
@@ -100,15 +124,25 @@
                                     @else
                                         <i class="far fa-circle nav-icon"></i>
                                     @endif
-                                    <p>Corporate Donors</p>
+                                    <p>Corporate Donor List</p>
                                 </a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Donations</p>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.cheque-deposits.index') }}"
+                                    class="nav-link @if (str_contains(URL::current(), 'admin/cheque-deposits')) active @endif">
+                                    @if (str_contains(URL::current(), 'admin/cheque-deposits'))
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                    @else
+                                        <i class="far fa-circle nav-icon"></i>
+                                    @endif
+                                    <p>Cheque Deposits
+                                        @php $pendingCheque = \App\Models\CorporateDeposit::where('method','offline')->where('status','under_review')->count(); @endphp
+                                        @if($pendingCheque > 0)
+                                            <span class="badge badge-pill badge-danger right">{{ $pendingCheque }}</span>
+                                        @endif
+                                    </p>
                                 </a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </li>
                 @endcan

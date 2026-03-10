@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CorporateDepositController extends Controller
@@ -166,5 +167,65 @@ class CorporateDepositController extends Controller
         $tran_id = $request->input('tran_id');
         CorporateDeposit::where('transaction_id', $tran_id)->update(['status' => 'failed']);
         return response("Deposit Failed.", 200);
+    }
+
+    /**
+     * Corporate donor submits a cheque deposit request.
+     * Wallet is NOT credited until admin approves.
+     */
+    public function submitChequeDeposit(Request $request): JsonResponse
+    {
+        $request->validate([
+            'amount'       => 'required|numeric|min:1',
+            'cheque_no'    => 'required|string|max:100',
+            'bank_name'    => 'required|string|max:100',
+            'cheque_image' => 'nullable|image|max:4096',
+        ]);
+
+        $user = $request->user();
+
+        if ($user->type !== 'corporate-donor') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only Corporate Donors can submit cheque deposit requests.',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('cheque_image')) {
+            $imagePath = $request->file('cheque_image')->store('cheque_deposits', 'public');
+        }
+
+        $deposit = CorporateDeposit::create([
+            'user_id'        => $user->id,
+            'amount'         => $request->amount,
+            'method'         => 'offline',
+            'transaction_id' => 'CHQ-' . strtoupper(Str::random(10)),
+            'status'         => CorporateDeposit::STATUS_UNDER_REVIEW,
+            'cheque_no'      => $request->cheque_no,
+            'bank_name'      => $request->bank_name,
+            'cheque_image'   => $imagePath,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cheque deposit request submitted. Admin will review and credit your wallet shortly.',
+            'deposit' => $deposit,
+        ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Return the authenticated donor's deposit history (all methods, paginated).
+     */
+    public function depositHistory(Request $request): JsonResponse
+    {
+        $deposits = CorporateDeposit::where('user_id', $request->user()->id)
+            ->orderByDesc('created_at')
+            ->paginate(20);
+
+        return response()->json([
+            'success' => true,
+            'data'    => $deposits,
+        ]);
     }
 }

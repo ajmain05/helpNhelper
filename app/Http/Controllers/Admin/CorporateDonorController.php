@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Campaign;
+use App\Models\Campaign\Campaign;
 use App\Models\CorporateAllocation;
 use App\Models\CorporateWallet;
 use Illuminate\Http\Request;
