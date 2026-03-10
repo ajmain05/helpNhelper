@@ -14,13 +14,11 @@ use App\Notifications\AllocationNotification;
 
 class CorporateDonorController extends Controller
 {
-    /**
-     * Display a listing of the corporate donors.
-     */
     public function index()
     {
-        $campaigns = Campaign::where('status', 'approved')->get();
-        return view('v1.admin.pages.corporate_donors.index', compact('campaigns'));
+        $campaigns    = Campaign::where('status', 'approved')->get();
+        $pendingCount = User::where('type', 'corporate-donor')->where('status', 'pending')->count();
+        return view('v1.admin.pages.corporate_donors.index', compact('campaigns', 'pendingCount'));
     }
 
     /**
@@ -38,11 +36,39 @@ class CorporateDonorController extends Controller
                 $balance = $row->corporateWallet ? $row->corporateWallet->balance : 0;
                 return 'Tk ' . number_format($balance, 2);
             })
-            ->addColumn('action', function ($row) {
-                return '<button class="btn btn-sm btn-info btn-allocate" data-id="' . $row->id . '" data-name="' . $row->name . '">Allocate Funds</button>';
+            ->addColumn('status_badge', function ($row) {
+                $color = match($row->status) {
+                    'approved' => 'success',
+                    'pending'  => 'warning',
+                    'rejected' => 'danger',
+                    default    => 'secondary',
+                };
+                return '<span class="badge badge-' . $color . '">' . ucfirst($row->status) . '</span>';
             })
-            ->rawColumns(['action'])
+            ->addColumn('action', function ($row) {
+                $btns = '';
+                if ($row->status === 'pending') {
+                    $btns .= '<button class="btn btn-xs btn-success btn-approve-donor mr-1" data-id="' . $row->id . '"><i class="fas fa-check"></i> Approve</button>';
+                    $btns .= '<button class="btn btn-xs btn-danger btn-reject-donor" data-id="' . $row->id . '"><i class="fas fa-times"></i> Reject</button>';
+                } elseif ($row->status === 'approved') {
+                    $btns .= '<button class="btn btn-sm btn-info btn-allocate" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-coins"></i> Allocate Funds</button>';
+                }
+                return $btns;
+            })
+            ->rawColumns(['action', 'status_badge'])
             ->make(true);
+    }
+
+    public function approveDonor(int $id)
+    {
+        User::where('id', $id)->where('type', 'corporate-donor')->update(['status' => 'approved']);
+        return response()->json(['success' => true, 'message' => 'Corporate donor approved.']);
+    }
+
+    public function rejectDonor(int $id)
+    {
+        User::where('id', $id)->where('type', 'corporate-donor')->update(['status' => 'rejected']);
+        return response()->json(['success' => true, 'message' => 'Corporate donor rejected.']);
     }
 
     /**

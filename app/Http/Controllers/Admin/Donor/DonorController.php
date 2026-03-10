@@ -47,10 +47,7 @@ class DonorController extends Controller
         //         }
         //     })
         //     ->latest();
-        $donors = User::where(function ($query) {
-            $query->orwhere('type', Type::Donor->value)
-                ->orWhere('type', Type::CorporateDonor->value);
-        })
+        $donors = User::where('type', Type::Donor->value)
             ->where('status', Status::Approved->value)
             ->where(function ($query) use ($request) {
                 if ($request->search['value']) {
