@@ -116,6 +116,18 @@
                             <i class="right fas fa-angle-left"></i>
                         </a>
                         <ul class="nav nav-treeview">
+                            {{-- Pending Requests --}}
+                            @if(($pendingCorporateDonor ?? 0) > 0)
+                            <li class="nav-item">
+                                <a href="{{ route('admin.corporate-donors.index') }}?status=pending"
+                                    class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors') && request('status') == 'pending') active @endif">
+                                    <i class="far fa-circle nav-icon text-warning"></i>
+                                    <p>Pending Requests
+                                        <span class="badge badge-pill badge-danger right">{{ $pendingCorporateDonor }}</span>
+                                    </p>
+                                </a>
+                            </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route('admin.corporate-donors.index') }}"
                                     class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors')) active @endif">
@@ -127,6 +139,7 @@
                                     <p>Corporate Donor List</p>
                                 </a>
                             </li>
+
                             <li class="nav-item">
                                 <a href="{{ route('admin.cheque-deposits.index') }}"
                                     class="nav-link @if (str_contains(URL::current(), 'admin/cheque-deposits')) active @endif">
