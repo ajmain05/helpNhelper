@@ -259,10 +259,10 @@
 
 @endsection
 
-@push('scripts')
+@section('additional_scripts')
 <script>
 $(document).ready(function () {
-    if ($.fn.select2) { $('.select2').select2({ dropdownParent: $('#addChequeModal') }); }
+    if ($.fn.select2) { $('.select2').select2({ theme: 'bootstrap4', width: '100%', dropdownParent: $('#addChequeModal') }); }
 
     function flash(type, msg) {
         $('#ajax-alert').html('<div class="alert alert-' + type + ' alert-dismissible fade show">' + msg +
@@ -305,4 +305,4 @@ $(document).ready(function () {
     });
 });
 </script>
-@endpush
+@endsection

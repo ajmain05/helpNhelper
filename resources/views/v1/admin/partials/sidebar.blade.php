@@ -122,7 +122,7 @@
                                 <a href="{{ route('admin.corporate-donors.index') }}?status=pending"
                                     class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors') && request('status') == 'pending') active @endif">
                                     <i class="far fa-circle nav-icon text-warning"></i>
-                                    <p>Pending Requests
+                                    <p>Corporate Donor Request
                                         <span class="badge badge-pill badge-danger right">{{ $pendingCorporateDonor }}</span>
                                     </p>
                                 </a>
