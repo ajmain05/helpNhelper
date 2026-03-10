@@ -21,7 +21,7 @@ class CorporateDepositController extends Controller
     public function initiateDeposit(Request $request): JsonResponse
     {
         $request->validate([
-            'amount' => ['required', 'numeric', 'min:10'],
+            'amount' => ['required', 'numeric', 'min:10', 'max:100000'],
         ]);
 
         $user = $request->user();
