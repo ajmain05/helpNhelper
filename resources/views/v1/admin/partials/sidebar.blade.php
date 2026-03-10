@@ -129,9 +129,9 @@
                             </li>
                             @endif
                             <li class="nav-item">
-                                <a href="{{ route('admin.corporate-donors.index') }}"
-                                    class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors')) active @endif">
-                                    @if (str_contains(URL::current(), 'admin/corporate-donors'))
+                                <a href="{{ route('admin.corporate-donors.index') }}?status=approved"
+                                    class="nav-link @if (str_contains(URL::current(), 'admin/corporate-donors') && request('status') != 'pending') active @endif">
+                                    @if (str_contains(URL::current(), 'admin/corporate-donors') && request('status') != 'pending')
                                         <i class="far fa-dot-circle nav-icon"></i>
                                     @else
                                         <i class="far fa-circle nav-icon"></i>

@@ -38,6 +38,8 @@ class CorporateDonorController extends Controller
 
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
+        } else {
+            $query->where('status', 'approved');
         }
 
         return Datatables::of($query)
