@@ -109,7 +109,7 @@ $(document).ready(function () {
     var table = $('#corporateDonorTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.corporate-donors.datatable') }}",
+        ajax: "{!! route('admin.corporate-donors.datatable', ['status' => request('status')]) !!}",
         columns: [
             { data: 'id',           name: 'id' },
             { data: 'name',         name: 'name' },

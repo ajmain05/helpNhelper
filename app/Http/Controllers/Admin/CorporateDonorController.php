@@ -24,12 +24,17 @@ class CorporateDonorController extends Controller
     /**
      * Get data for DataTables.
      */
-    public function getDatatableAjax()
+    public function getDatatableAjax(Request $request)
     {
-        $donors = User::where('type', 'corporate-donor')
+        $query = User::where('type', 'corporate-donor')
             ->orderBy('id', 'desc')
-            ->with('corporateWallet')
-            ->get();
+            ->with('corporateWallet');
+
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        $donors = $query->get();
 
         return Datatables::of($donors)
             ->addColumn('wallet', function ($row) {
