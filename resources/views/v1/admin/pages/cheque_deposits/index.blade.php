@@ -2,9 +2,21 @@
 @section('title', 'Cheque Deposits')
 @section('header', 'Cheque Deposit Requests')
 @section('content')
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Cheque Deposit Requests</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<section class="content">
-<div class="container-fluid">
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
 
     <div id="ajax-alert" class="mb-3"></div>
 
@@ -239,6 +251,10 @@
             </div>
         </div>
     </div>
+</div>
+
+        </div>
+    </section>
 </div>
 
 @endsection

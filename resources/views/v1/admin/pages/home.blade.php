@@ -36,8 +36,21 @@
 @endphp
 
 @section('content')
-<section class="content">
-<div class="container-fluid">
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dashboard</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
 
 {{-- ══ Row 1: Key Metrics (2×2 grid on small, 4-col on large) ══ --}}
 <div class="row mt-3">
@@ -256,6 +269,7 @@
 
 </div>{{-- / Row 3 --}}
 
-</div>{{-- / container-fluid --}}
-</section>
+        </div>{{-- / container-fluid --}}
+    </section>
+</div>
 @endsection
