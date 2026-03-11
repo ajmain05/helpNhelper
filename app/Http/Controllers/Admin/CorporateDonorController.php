@@ -66,7 +66,8 @@ class CorporateDonorController extends Controller
                     $btns .= '<button class="btn btn-xs btn-success btn-approve-donor mr-1" data-id="' . $row->id . '"><i class="fas fa-check"></i> Approve</button>';
                     $btns .= '<button class="btn btn-xs btn-danger btn-reject-donor" data-id="' . $row->id . '"><i class="fas fa-times"></i> Reject</button>';
                 } elseif ($row->status === 'approved') {
-                    $btns .= '<button class="btn btn-sm btn-info btn-allocate" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-coins"></i> Allocate Funds</button>';
+                    $btns .= '<button class="btn btn-sm btn-info btn-allocate mr-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-coins"></i> Allocate</button>';
+                    $btns .= '<button class="btn btn-sm btn-secondary btn-allocations" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-history"></i> History</button>';
                 }
                 return $btns;
             })
@@ -168,6 +169,67 @@ class CorporateDonorController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Get a list of past allocations for a specific corporate donor.
+     */
+    public function allocations($id)
+    {
+        $allocations = CorporateAllocation::with('campaign')
+            ->where('user_id', $id)
+            ->latest('id')
+            ->get();
+            
+        return response()->json(['success' => true, 'allocations' => $allocations]);
+    }
+
+    /**
+     * Refund a corporate allocation back to the donor's wallet.
+     */
+    public function refundAllocation(Request $request, $id)
+    {
+        $allocation = CorporateAllocation::findOrFail($id);
+        
+        $donor = User::where('id', $allocation->user_id)->where('type', 'corporate-donor')->firstOrFail();
+        $campaign = Campaign::findOrFail($allocation->campaign_id);
+        $wallet = CorporateWallet::where('user_id', $allocation->user_id)->firstOrFail();
+
+        DB::beginTransaction();
+        try {
+            // 1. Delete associated transactions and invoice that credited the campaign
+            $transaction = Transaction::where('donor_id', $allocation->user_id)
+                ->where('campaign_id', $allocation->campaign_id)
+                ->where('amount', $allocation->amount)
+                ->latest('id')
+                ->first();
+                
+            if($transaction) {
+                if($transaction->invoice_id) {
+                    Invoice::where('id', $transaction->invoice_id)->delete();
+                }
+                $transaction->delete();
+            }
+
+            // 2. Add funds back to the corporate wallet
+            $wallet->balance += $allocation->amount;
+            $wallet->save();
+
+            // 3. Delete the allocation record
+            $refundAmount = $allocation->amount;
+            $allocation->delete();
+
+            DB::commit();
+
+            // 4. Send Database Notification to the Corporate Donor
+            $donor->notify(new \App\Notifications\RefundAllocationNotification($refundAmount, $campaign->title, $wallet->balance));
+
+            return response()->json(['success' => true, 'message' => 'Allocation refunded successfully. Wallet balance updated.']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => 'Refund Failed: ' . $e->getMessage()]);
         }
     }
 }

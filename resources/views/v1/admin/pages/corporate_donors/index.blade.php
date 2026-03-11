@@ -109,6 +109,39 @@
                 </div>
             </form>
         </div>
+</div>
+    </div>
+</div>
+
+{{-- Allocations History Modal --}}
+<div class="modal fade" id="allocationsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Past Allocations &mdash; <span id="historyDonorNameDisplay"></span></h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="allocationsTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Campaign</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -167,6 +200,79 @@ $(document).ready(function () {
                 } else if (xhr.responseText) {
                     msg = xhr.responseText.substring(0, 100) + '...';
                 }
+                flash('danger', msg);
+            }
+        });
+    });
+
+    // ── Open Allocations History Modal
+    $('body').on('click', '.btn-allocations', function () {
+        var donorId = $(this).data('id');
+        var donorName = $(this).data('name');
+        
+        $('#historyDonorNameDisplay').text(donorName);
+        $('#allocationsTable tbody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+        $('#allocationsModal').modal('show');
+
+        $.ajax({
+            url: "{{ url('admin/corporate-donors/allocations') }}/" + donorId,
+            type: 'GET',
+            success: function (res) {
+                var tbody = '';
+                if (res.success && res.allocations.length > 0) {
+                    res.allocations.forEach(function (allocation) {
+                        var date = new Date(allocation.allocated_at).toLocaleDateString();
+                        var campaignTitle = allocation.campaign ? allocation.campaign.title : 'Unknown';
+                        
+                        tbody += '<tr>' +
+                            '<td>' + date + '</td>' +
+                            '<td>' + campaignTitle + '</td>' +
+                            '<td>Tk ' + parseFloat(allocation.amount).toFixed(2) + '</td>' +
+                            '<td>' +
+                                '<button class="btn btn-sm btn-danger btn-refund" data-id="' + allocation.id + '" data-donor-id="'+ donorId +'">' +
+                                    '<i class="fas fa-undo"></i> Refund' +
+                                '</button>' +
+                            '</td>' +
+                        '</tr>';
+                    });
+                } else {
+                    tbody = '<tr><td colspan="4" class="text-center">No past allocations found.</td></tr>';
+                }
+                $('#allocationsTable tbody').html(tbody);
+            },
+            error: function () {
+                $('#allocationsTable tbody').html('<tr><td colspan="4" class="text-center text-danger">Failed to load allocations.</td></tr>');
+            }
+        });
+    });
+
+    // ── Execute Refund
+    $('body').on('click', '.btn-refund', function () {
+        if (!confirm('Are you sure you want to refund this allocation? The dashboard and campaign totals will be updated.')) return;
+        
+        var btn = $(this);
+        var allocationId = btn.data('id');
+        var donorId = btn.data('donor-id');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Refunding...');
+
+        $.ajax({
+            url: "{{ url('admin/corporate-donors/allocation') }}/" + allocationId + "/refund",
+            type: 'POST',
+            data: { _token: "{{ csrf_token() }}" },
+            success: function (res) {
+                if (res.success) {
+                    flash('success', res.message);
+                    table.ajax.reload();
+                    $('#allocationsModal').modal('hide');
+                } else {
+                    flash('danger', res.message);
+                    btn.prop('disabled', false).html('<i class="fas fa-undo"></i> Refund');
+                }
+            },
+            error: function (xhr) {
+                btn.prop('disabled', false).html('<i class="fas fa-undo"></i> Refund');
+                var msg = 'Failed to process refund.';
+                if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
                 flash('danger', msg);
             }
         });
