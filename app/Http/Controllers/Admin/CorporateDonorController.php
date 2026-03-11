@@ -10,7 +10,7 @@ use App\Models\CorporateWallet;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
-use App\Notifications\AllocationNotification;
+use App\Notifications\CorporateAllocationNotification;
 use App\Models\Transaction\Transaction;
 use App\Models\Invoice\Invoice;
 use Carbon\Carbon;
@@ -161,7 +161,7 @@ class CorporateDonorController extends Controller
             DB::commit();
 
             // 4. Send Database Notification to the Corporate Donor
-            $donor->notify(new AllocationNotification($request->amount, $campaign->title, $wallet->balance));
+            $donor->notify(new CorporateAllocationNotification($request->amount, $campaign->title, $wallet->balance));
 
             return response()->json(['success' => true, 'message' => 'Funds allocated securely. Wallet updated!']);
 
