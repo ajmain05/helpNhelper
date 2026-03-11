@@ -108,6 +108,8 @@ class CorporateDonorController extends Controller
             return response()->json(['success' => false, 'message' => 'Insufficient wallet balance.']);
         }
 
+        $campaign = Campaign::findOrFail($request->campaign_id);
+
         DB::beginTransaction();
         try {
             // 1. Deduct from wallet
