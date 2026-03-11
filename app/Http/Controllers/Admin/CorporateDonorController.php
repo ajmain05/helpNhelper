@@ -64,11 +64,15 @@ class CorporateDonorController extends Controller
                 $btns = '';
                 if ($row->status === 'pending') {
                     $btns .= '<button class="btn btn-xs btn-success btn-approve-donor mr-1" data-id="' . $row->id . '"><i class="fas fa-check"></i> Approve</button>';
-                    $btns .= '<button class="btn btn-xs btn-danger btn-reject-donor" data-id="' . $row->id . '"><i class="fas fa-times"></i> Reject</button>';
+                    $btns .= '<button class="btn btn-xs btn-warning btn-reject-donor mr-1" data-id="' . $row->id . '"><i class="fas fa-times"></i> Reject</button>';
                 } elseif ($row->status === 'approved') {
                     $btns .= '<button class="btn btn-sm btn-info btn-allocate mr-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-coins"></i> Allocate</button>';
-                    $btns .= '<button class="btn btn-sm btn-secondary btn-allocations" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-history"></i> History</button>';
+                    $btns .= '<button class="btn btn-sm btn-secondary btn-allocations mr-1" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="fas fa-history"></i> History</button>';
                 }
+                
+                // Add Delete button for all statuses
+                $btns .= '<button class="btn btn-sm btn-danger btn-delete-donor" data-id="' . $row->id . '"><i class="fas fa-trash"></i> Delete</button>';
+                
                 return $btns;
             })
             ->rawColumns(['action', 'status_badge'])
@@ -85,6 +89,24 @@ class CorporateDonorController extends Controller
     {
         User::where('id', $id)->where('type', 'corporate-donor')->update(['status' => 'rejected']);
         return response()->json(['success' => true, 'message' => 'Corporate donor rejected.']);
+    }
+
+    public function delete(int $id)
+    {
+        $donor = User::where('id', $id)->where('type', 'corporate-donor')->firstOrFail();
+        
+        // Start transaction in case they have related elements to delete
+        DB::beginTransaction();
+        try {
+            // Associated data like CorporateWallet, CorpAllocations should be deleted via foreign key cascading,
+            // but just to be safe, delete the user itself
+            $donor->delete();
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Corporate Donor deleted successfully.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => 'Failed to delete donor. ' . $e->getMessage()]);
+        }
     }
 
     /**

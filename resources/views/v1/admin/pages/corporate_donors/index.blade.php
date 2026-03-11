@@ -302,6 +302,30 @@ $(document).ready(function () {
                });
     });
 
+    // ── Delete Donor
+    $('body').on('click', '.btn-delete-donor', function () {
+        if (!confirm('Are you absolutely sure you want to delete this Corporate Donor? All associated wallet data and allocations will also be permanently removed.')) return;
+        var id = $(this).data('id');
+        $.ajax({
+            url: "{{ url('admin/corporate-donors/delete') }}/" + id,
+            type: 'DELETE',
+            data: { _token: "{{ csrf_token() }}" },
+            success: function (res) {
+                if (res.success) {
+                    flash('success', res.message);
+                    table.ajax.reload();
+                } else {
+                    flash('danger', res.message);
+                }
+            },
+            error: function (xhr) {
+                var msg = 'Failed to delete corporate donor.';
+                if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                flash('danger', msg);
+            }
+        });
+    });
+
     function flash(type, msg) {
         $('#alert-container').html(
             '<div class="alert alert-' + type + ' alert-dismissible fade show">' + msg +

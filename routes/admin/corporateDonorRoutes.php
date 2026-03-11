@@ -13,6 +13,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/allocation/{id}/refund', [CorporateDonorController::class, 'refundAllocation'])->name('admin.corporate-donors.refund');
             Route::post('/{id}/approve', [CorporateDonorController::class, 'approveDonor'])->name('admin.corporate-donors.approve');
             Route::post('/{id}/reject', [CorporateDonorController::class, 'rejectDonor'])->name('admin.corporate-donors.reject');
+            Route::delete('/delete/{id}', [CorporateDonorController::class, 'delete'])->name('admin.corporate-donors.delete');
         });
     });
 });
