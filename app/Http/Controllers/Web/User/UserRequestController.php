@@ -32,7 +32,7 @@ class UserRequestController extends Controller
             'name' => ['required', 'string'],
             'email' => ['required_without:mobile', 'email', 'nullable', 'unique:users,email'],
             'mobile' => ['required_without:email', 'string', 'nullable', 'unique:users,mobile'],
-            'auth_file' => ['required_if:type,seeker,volunteer,organization', 'file', 'mimetypes:image/jpeg,image/png,application/pdf', 'nullable'],
+            'auth_file' => ['required_if:type,seeker,volunteer', 'file', 'mimetypes:image/jpeg,image/png,application/pdf', 'nullable'],
             'upazila' => ['required_if:type,seeker,volunteer,organization'],
             'permanent_address' => ['required_if:type,seeker,volunteer', 'string', 'nullable'],
             'present_address' => ['required_if:type,seeker,volunteer', 'string', 'nullable'],
