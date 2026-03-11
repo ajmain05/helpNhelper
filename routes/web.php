@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
         include 'admin/volunteerRoutes.php';
         include 'admin/donorRoutes.php';
         include 'admin/corporateDonorRoutes.php';
+        include 'admin/chequeDepositRoutes.php';
         include 'admin/campaignRoutes.php';
         include 'admin/faqRoutes.php';
         include 'admin/contentRoutes.php';
