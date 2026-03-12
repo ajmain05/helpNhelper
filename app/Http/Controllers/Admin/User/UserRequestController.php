@@ -273,6 +273,27 @@ class UserRequestController extends Controller
                     $userRequest->present_address = $request->present_address ?? null;
                 }
             }
+            if ($request->type == Type::Organization->value) {
+                if (isset($request->office_address)) {
+                    $userRequest->office_address = $request->office_address;
+                }
+                if (isset($request->org_reg_type)) {
+                    $userRequest->org_reg_type = $request->org_reg_type;
+                }
+                if ($request->org_reg_type === 'registered') {
+                    $userRequest->reg_body = $request->reg_body ?? null;
+                    $userRequest->reg_no = $request->reg_no ?? null;
+                    // certificate image update 
+                    if ($request->file('cert_image')) {
+                        $certPath = $this->storeFile('user', $request->file('cert_image'), 'cert');
+                        $userRequest->cert_image = $certPath ?? null;
+                    }
+                } else {
+                    $userRequest->years_of_op = $request->years_of_op ?? null;
+                    $userRequest->beneficiaries_count = $request->beneficiaries_count ?? null;
+                    $userRequest->working_sectors = $request->working_sectors ?? null;
+                }
+            }
             if ($request->file('photo')) {
                 $photoPath = $this->storeFile('user', $request->file('photo'), 'photo');
                 $userRequest->photo = $photoPath ?? null;

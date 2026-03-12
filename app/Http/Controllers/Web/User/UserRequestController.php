@@ -37,8 +37,14 @@ class UserRequestController extends Controller
             'permanent_address' => ['required_if:type,seeker,volunteer', 'string', 'nullable'],
             'present_address' => ['required_if:type,seeker,volunteer', 'string', 'nullable'],
             'office_address' => ['required_if:type,organization', 'string', 'nullable'],
-            'license_no' => ['required_if:type,organization', 'string', 'nullable'],
-            'license_image' => ['required_if:type,organization', 'file', 'mimes:jpeg,png,jpg', 'nullable'],
+            // Organization registration type fields
+            'org_reg_type' => ['required_if:type,organization', 'nullable', 'string', Rule::in(['registered', 'unregistered'])],
+            'reg_body' => ['required_if:org_reg_type,registered', 'nullable', 'string'],
+            'reg_no' => ['required_if:org_reg_type,registered', 'nullable', 'string'],
+            'cert_image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,pdf'],
+            'years_of_op' => ['required_if:org_reg_type,unregistered', 'nullable', 'string'],
+            'beneficiaries_count' => ['required_if:org_reg_type,unregistered', 'nullable', 'string'],
+            'working_sectors' => ['required_if:org_reg_type,unregistered', 'nullable', 'string'],
             'fb_link' => ['nullable'],
             'photo' => ['required_if:type,seeker,volunteer,organization', 'file', 'mimes:jpeg,png,jpg', 'nullable'],
             'password' => ['required', 'min:8', 'max:32'],
@@ -80,10 +86,20 @@ class UserRequestController extends Controller
             }
             if ($userRequest->type == Type::Organization->value) {
                 $userRequest->office_address = $request->office_address ?? null;
-                $userRequest->license_no = $request->license_no ?? null;
-                if ($request->file('license_image')) {
-                    $license_image = $this->storeFile('user', $request->file('license_image'), 'license_image');
-                    $userRequest->license_image = $license_image ?? null;
+                $userRequest->org_reg_type   = $request->org_reg_type ?? null;
+
+                if ($request->org_reg_type === 'registered') {
+                    $userRequest->reg_body = $request->reg_body ?? null;
+                    $userRequest->reg_no   = $request->reg_no ?? null;
+                    // Store certificate image
+                    if ($request->file('cert_image')) {
+                        $certPath = $this->storeFile('user', $request->file('cert_image'), 'cert');
+                        $userRequest->cert_image = $certPath ?? null;
+                    }
+                } else {
+                    $userRequest->years_of_op          = $request->years_of_op ?? null;
+                    $userRequest->beneficiaries_count  = $request->beneficiaries_count ?? null;
+                    $userRequest->working_sectors      = $request->working_sectors ?? null;
                 }
             }
 

@@ -198,9 +198,53 @@
                                         </div>
                                         @if ($userRequest->type == 'organization')
                                             <div class="form-group">
+                                                <label class="form-label" for="org_reg_type">Organization Registration Type</label>
+                                                <select class="form-control" id="org_reg_type" name="org_reg_type">
+                                                    <option value="registered" {{ $userRequest->org_reg_type == 'registered' ? 'selected' : '' }}>Registered</option>
+                                                    <option value="unregistered" {{ $userRequest->org_reg_type == 'unregistered' ? 'selected' : '' }}>Unregistered</option>
+                                                </select>
+                                                @error('org_reg_type')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div id="registered_fields" style="display: {{ $userRequest->org_reg_type == 'registered' || !$userRequest->org_reg_type ? 'block' : 'none' }};">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="reg_body">Registration Body</label>
+                                                    <input type="text" class="form-control" id="reg_body" name="reg_body" value="{{ $userRequest->reg_body }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="reg_no">Registration Number</label>
+                                                    <input type="text" class="form-control" id="reg_no" name="reg_no" value="{{ $userRequest->reg_no }}">
+                                                </div>
+                                                <div class="form-group d-flex flex-column">
+                                                    <label class="form-label" for="cert_image">Registration Certificate Image/PDF</label>
+                                                    @if($userRequest->cert_image)
+                                                        <a href="{{ asset($userRequest->cert_image) }}" target="_blank" class="mb-2">View Existing Certificate</a>
+                                                    @endif
+                                                    <input type="file" class="form-control-file" id="cert_image" name="cert_image" accept=".jpg,.jpeg,.png,.pdf">
+                                                </div>
+                                            </div>
+
+                                            <div id="unregistered_fields" style="display: {{ $userRequest->org_reg_type == 'unregistered' ? 'block' : 'none' }};">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="years_of_op">Years of Operation</label>
+                                                    <input type="text" class="form-control" id="years_of_op" name="years_of_op" value="{{ $userRequest->years_of_op }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="beneficiaries_count">Number of Beneficiaries</label>
+                                                    <input type="text" class="form-control" id="beneficiaries_count" name="beneficiaries_count" value="{{ $userRequest->beneficiaries_count }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="working_sectors">Working Sectors</label>
+                                                    <input type="text" class="form-control" id="working_sectors" name="working_sectors" value="{{ $userRequest->working_sectors }}" placeholder="e.g. Education, Health (comma separated)">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
                                                 <label class="form-label" for="office_address">Office Address</label>
                                                 <textarea type="text" class="form-control @error('office_address') is-invalid @enderror" id="office_address"
-                                                    name="office_address" placeholder="Enter your permanent address">{{ $userRequest->office_address }}</textarea>
+                                                    name="office_address" placeholder="Enter your office address">{{ $userRequest->office_address }}</textarea>
                                                 @error('office_address')
                                                     <span class="invalid-feedback">
                                                         <strong>{{ $message }}</strong>
@@ -301,8 +345,15 @@
                 $('#present_address').val($('#permanent_address').val());
             }
         });
-        // $(document).ready(function() {
-        //     $('.select2').select2();
-        // });
+        
+        $('#org_reg_type').change(function() {
+            if ($(this).val() === 'registered') {
+                $('#registered_fields').show();
+                $('#unregistered_fields').hide();
+            } else if ($(this).val() === 'unregistered') {
+                $('#registered_fields').hide();
+                $('#unregistered_fields').show();
+            }
+        });
     </script>
 @endsection

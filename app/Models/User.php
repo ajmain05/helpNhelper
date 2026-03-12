@@ -38,6 +38,15 @@ class User extends Authenticatable implements CanResetPassword, MustVerifyEmail
         'type',
         'status',
         'sid',
+        // Organization fields
+        'office_address',
+        'org_reg_type',
+        'reg_body',
+        'reg_no',
+        'cert_image',
+        'years_of_op',
+        'beneficiaries_count',
+        'working_sectors',
     ];
 
     /**
