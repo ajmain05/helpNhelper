@@ -52,7 +52,7 @@ class OrganizationApplicationController extends Controller
                 'title' => $request->title,
                 'description' => $request->description,
                 'category' => $request->category,
-                'target_amount' => $request->target_amount,
+                'requested_amount' => $request->target_amount,
                 'seeker_name' => $request->seeker_name,
                 'seeker_location' => $request->seeker_location,
                 'payment_method' => $request->payment_method,
