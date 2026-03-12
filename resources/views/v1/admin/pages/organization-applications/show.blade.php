@@ -51,10 +51,43 @@
                                         <p>{{ $organizationApplication->description }}</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
+                                    <div class="col-md-6">
                                         <label for="requested_amount">Requested Amount</label>
                                         <p>{{ $organizationApplication->requested_amount }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="collected_amount">Collected Amount</label>
+                                        <p>{{ $organizationApplication->collected_amount }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="seeker_name">Seeker Name</label>
+                                        <p>{{ $organizationApplication->seeker_name ?? 'N/A' }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="seeker_location">Seeker Location</label>
+                                        <p>{{ $organizationApplication->seeker_location ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="category">Category</label>
+                                        <p>{{ $organizationApplication->category ?? 'N/A' }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="service_charge_pct">Service Charge (%)</label>
+                                        <p>{{ $organizationApplication->service_charge_pct }}%</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="payment_method">Payment Method</label>
+                                        <p>{{ $organizationApplication->payment_method ?? 'N/A' }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="payment_account">Payment Account</label>
+                                        <p>{{ $organizationApplication->payment_account ?? 'N/A' }}</p>
                                     </div>
                                 </div>
                                 <div class="row">

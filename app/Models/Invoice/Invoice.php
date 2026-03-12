@@ -14,10 +14,16 @@ class Invoice extends Model
     protected $fillable = [
         'campaign_id',
         'sid',
+        'organization_application_id',
         'status',
         'date',
         'created_by',
     ];
+
+    public function organizationApplication(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationApplication::class);
+    }
 
     public function transaction(): HasOne
     {

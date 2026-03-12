@@ -3,8 +3,13 @@
 use App\Http\Controllers\Api\CorporateDepositController;
 use App\Http\Controllers\Api\CorporateWalletController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\OrganizationApplicationController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    // Organization Applications
+    Route::post('organization/application', [OrganizationApplicationController::class, 'store']);
+    Route::get('organization/applications', [OrganizationApplicationController::class, 'index']);
+
     Route::post('fund-request', [UserController::class, 'fundRequestStore']);
     Route::get('user-info', [UserController::class, 'index']);
     Route::get('user-history', [UserController::class, 'history']);

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Notifications\CorporateAllocationNotification;
 use App\Models\Transaction\Transaction;
 use App\Models\Invoice\Invoice;
+use App\Models\Organization\OrganizationApplication;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,8 +28,14 @@ class CorporateDonorController extends Controller
             return $totalRaised < $campaign->amount;
         })->values();
 
+        $organizationApplications = OrganizationApplication::where('status', 'approved')
+            ->get()
+            ->filter(function ($app) {
+                return $app->collected_amount < $app->requested_amount;
+            })->values();
+
         $pendingCount = User::where('type', 'corporate-donor')->where('status', 'pending')->count();
-        return view('v1.admin.pages.corporate_donors.index', compact('campaigns', 'pendingCount'));
+        return view('v1.admin.pages.corporate_donors.index', compact('campaigns', 'organizationApplications', 'pendingCount'));
     }
 
     /**
@@ -116,9 +123,14 @@ class CorporateDonorController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'campaign_id' => 'required|exists:campaigns,id',
+            'campaign_id' => 'nullable|exists:campaigns,id',
+            'organization_application_id' => 'nullable|exists:organization_applications,id',
             'amount' => 'required|numeric|min:1',
         ]);
+
+        if (empty($request->campaign_id) && empty($request->organization_application_id)) {
+            return response()->json(['success' => false, 'message' => 'Please select a campaign or organization request.']);
+        }
 
         $donor = User::where('id', $request->user_id)->where('type', 'corporate-donor')->firstOrFail();
         $wallet = CorporateWallet::firstOrCreate(
@@ -141,16 +153,18 @@ class CorporateDonorController extends Controller
             // 2. Record Allocation
             CorporateAllocation::create([
                 'user_id' => $donor->id,
-                'campaign_id' => $request->campaign_id,
+                'campaign_id' => $request->campaign_id ?? null,
+                'organization_application_id' => $request->organization_application_id ?? null,
                 'amount' => $request->amount,
                 'allocated_at' => now(),
             ]);
 
-            // 3. Create Invoice & Transaction to credit the Campaign
+            // 3. Create Invoice & Transaction
             $paymentDateTime = Carbon::now();
 
             $invoice = Invoice::create([
-                'campaign_id' => $request->campaign_id,
+                'campaign_id' => $request->campaign_id ?? null,
+                'organization_application_id' => $request->organization_application_id ?? null,
                 'status' => 1,
                 'date' => $paymentDateTime,
                 'created_by' => Auth::id(),
@@ -167,10 +181,11 @@ class CorporateDonorController extends Controller
                 'status' => 1,
                 'type' => 'income',
                 'sub_type' => 'digital',
-                'campaign_id' => $request->campaign_id,
+                'campaign_id' => $request->campaign_id ?? null,
+                'organization_application_id' => $request->organization_application_id ?? null,
                 'transaction_category_id' => null,
                 'transaction_mode_id' => null,
-                'bank_id' => 1, 
+                'bank_id' => 1,
                 'bank_account_id' => 1,
                 'invoice_id' => $invoice->id,
                 'donor_id' => $donor->id,
@@ -180,13 +195,21 @@ class CorporateDonorController extends Controller
                 'created_by' => Auth::id(),
             ]);
 
+            // Update collected amount for organization application if applicable
+            if ($request->organization_application_id) {
+                $orgApp = OrganizationApplication::find($request->organization_application_id);
+                $orgApp->collected_amount += $request->amount;
+                $orgApp->save();
+            }
+
             // Campaign goal is satisfied implicitly since we record the Allocation. 
             // The Campaign's total raised is evaluated virtually via transactions.
 
             DB::commit();
 
             // 4. Send Database Notification to the Corporate Donor
-            $donor->notify(new CorporateAllocationNotification($request->amount, $campaign->title, $wallet->balance));
+            $title = $request->campaign_id ? Campaign::find($request->campaign_id)->title : OrganizationApplication::find($request->organization_application_id)->title;
+            $donor->notify(new CorporateAllocationNotification($request->amount, $title, $wallet->balance));
 
             return response()->json(['success' => true, 'message' => 'Funds allocated securely. Wallet updated!']);
 
@@ -201,7 +224,7 @@ class CorporateDonorController extends Controller
      */
     public function allocations($id)
     {
-        $allocations = CorporateAllocation::with('campaign')
+        $allocations = CorporateAllocation::with(['campaign', 'organizationApplication'])
             ->where('user_id', $id)
             ->latest('id')
             ->get();

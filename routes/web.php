@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
         include 'admin/financeRoutes.php';
         include 'admin/successStoryRoutes.php';
         include 'admin/ratingRoutes.php';
+        include 'admin/settingRoutes.php';
         
         // Language & Translation
         Route::get('/admin/languages', [App\Http\Controllers\Admin\LanguageController::class, 'index'])->name('admin.language.index');

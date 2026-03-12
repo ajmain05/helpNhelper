@@ -59,6 +59,7 @@ class OrganizationApplicationController extends Controller
                 $q->orWhere('sid', 'like', '%'.$request->search['value'].'%')
                     ->orWhere('title', 'like', '%'.$request->search['value'].'%')
                     ->orWhere('requested_amount', 'like', '%'.$request->search['value'].'%')
+                    ->orWhere('collected_amount', 'like', '%'.$request->search['value'].'%')
                     ->orWhere('completion_date', 'like', '%'.$request->search['value'].'%')
                     ->orWhere('status', 'like', '%'.$request->search['value'].'%')
                     ->orWhere('created_at', 'like', '%'.$request->search['value'].'%');
@@ -173,33 +174,31 @@ class OrganizationApplicationController extends Controller
      */
     public function edit($id)
     {
-        $organizationApplication = OrganizationApplication::with(['user', 'volunteers'])->find($id);
+        $organizationApplication = OrganizationApplication::with(['user'])->find($id);
         // Check in the upazila
         $volunteers = User::where('type', Type::Volunteer->value)
             ->where('status', Status::Approved->value)
-            ->where('upazila_id', $organizationApplication->user->upazilla)
+            ->when($organizationApplication->user && $organizationApplication->user->upazila_id, function($q) use ($organizationApplication) {
+                $q->where('upazila_id', $organizationApplication->user->upazila_id);
+            })
             ->get();
 
         // Check in the district
-        if ($volunteers->isEmpty()) {
+        if ($volunteers->isEmpty() && $organizationApplication->user && $organizationApplication->user->upazila && $organizationApplication->user->upazila->district) {
             $allUpazilas = $organizationApplication->user->upazila->district->upazilas()->pluck('id');
-            // return $allUpazilas;
             $volunteers = User::where('type', Type::Volunteer->value)
                 ->where('status', Status::Approved->value)
                 ->whereIn('upazila_id', $allUpazilas)
                 ->get();
-            // return $volunteers;
         }
         // Check in the division
-        if ($volunteers->isEmpty()) {
+        if ($volunteers->isEmpty() && $organizationApplication->user && $organizationApplication->user->upazila && $organizationApplication->user->upazila->district && $organizationApplication->user->upazila->district->division) {
             $allDistricts = $organizationApplication->user->upazila->district->division->districts()->pluck('id');
             $allUpazilas = Upazila::whereIn('district_id', $allDistricts)->pluck('id');
-            // return $allUpazilas;
             $volunteers = User::where('type', Type::Volunteer->value)
                 ->where('status', Status::Approved->value)
                 ->whereIn('upazila_id', $allUpazilas)
                 ->get();
-            // return $volunteers;
         }
 
         // Check in the country
@@ -207,21 +206,8 @@ class OrganizationApplicationController extends Controller
             $volunteers = User::where('type', Type::Volunteer->value)
                 ->where('status', Status::Approved->value)
                 ->get();
-            // return $volunteers;
         }
 
-        // return $organizationApplication->volunteers[0]->id;
-
-        // $divisions = Division::all();
-        // $districts = District::all();
-        // $upazilas = Upazila::all();
-        // $countries = Country::all();
-
-        $volunteers = User::where('type', Type::Volunteer->value)
-            ->where('status', Status::Approved->value)
-            ->get();
-
-        // return view('v1.admin.pages.organization-applications.edit', compact('organizationApplication', 'volunteers', 'countries', 'upazilas', 'divisions', 'districts'));
         return view('v1.admin.pages.organization-applications.edit', compact('organizationApplication', 'volunteers'));
     }
 
@@ -249,7 +235,14 @@ class OrganizationApplicationController extends Controller
             'completion_date' => ['nullable', 'date'],
             // 'created_for_self' => ['required', 'boolean'],
             // 'auth_file' => ['nullable', 'file', 'required_if:created_for_self,false', 'mimes:pdf'],
+            'category' => ['nullable', 'string'],
+            'seeker_name' => ['nullable', 'string'],
+            'seeker_location' => ['nullable', 'string'],
+            'payment_method' => ['nullable', 'string'],
+            'payment_account' => ['nullable', 'string'],
             'status' => ['required', 'in:'.implode(',', OrganizationApplicationStatus::values())],
+            'collected_amount' => ['nullable', 'numeric'],
+            'service_charge_pct' => ['nullable', 'numeric'],
             'image' => ['file', 'mimes:jpeg,png,jpg', 'nullable'],
             'document' => ['file', 'mimetypes:image/jpeg,image/png,application/pdf', 'nullable'],
         ]);
@@ -258,8 +251,15 @@ class OrganizationApplicationController extends Controller
             $organizationApplication = OrganizationApplication::find($request->id);
             $organizationApplication->title = $request->title;
             $organizationApplication->description = $request->description ?? null;
+            $organizationApplication->category = $request->category ?? null;
             $organizationApplication->requested_amount = $request->requested_amount;
+            $organizationApplication->collected_amount = $request->collected_amount ?? 0;
+            $organizationApplication->seeker_name = $request->seeker_name ?? null;
+            $organizationApplication->seeker_location = $request->seeker_location ?? null;
+            $organizationApplication->payment_method = $request->payment_method ?? null;
+            $organizationApplication->payment_account = $request->payment_account ?? null;
             $organizationApplication->completion_date = $request->completion_date ?? null;
+            $organizationApplication->service_charge_pct = $request->service_charge_pct ?? 7.00;
             // $organizationApplication->created_for_self = $request->created_for_self;
             $organizationApplication->status = $request->status;
             if ($request->file('document')) {
@@ -272,15 +272,12 @@ class OrganizationApplicationController extends Controller
             }
             $organizationApplication->save();
 
-            $organizationApplicationVolunteers = $organizationApplication->volunteers;
+            if ($request->volunteer_id && $organizationApplication->assigned_volunteer_id != $request->volunteer_id) {
+                $organizationApplication->assigned_volunteer_id = $request->volunteer_id;
+                $organizationApplication->save();
 
-            if ($request->volunteer_id && (count($organizationApplicationVolunteers) == 0 || $organizationApplication->volunteers()->first()->id != $request->volunteer_id)) {
-                $assignVolunteer = new OrganizationApplicationVolunteer();
-                $assignVolunteer->organization_application_id = $organizationApplication->id;
-                $assignVolunteer->user_id = $request->volunteer_id;
-                $assignVolunteer->save();
-
-                $volunteerMobile = $assignVolunteer->user->mobile;
+                $volunteer = User::find($request->volunteer_id);
+                $volunteerMobile = $volunteer ? $volunteer->mobile : null;
                 if ($volunteerMobile) {
                     $message = <<<EOD
                     "You have been assigned the organization application titled: {$organizationApplication->title}."

@@ -624,6 +624,14 @@
                         <p>Ratings</p>
                     </a>
                 </li>
+                <li class="nav-header">SYSTEM</li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.general-settings.index') }}"
+                        class="nav-link @if (str_contains(URL::current(), 'admin/general-settings')) active @endif">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>General Settings</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

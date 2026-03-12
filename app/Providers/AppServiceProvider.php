@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Models\Campaign\Campaign;
 use App\Models\Donation;
 use App\Models\Invoice\Invoice;
+use App\Models\Organization\OrganizationApplication;
 use App\Models\Seeker\SeekerApplication;
 use App\Models\Transaction\Transaction;
 use App\Models\User;
 use App\Observers\CampaignObserver;
 use App\Observers\DonationObserver;
 use App\Observers\InvoiceObserver;
+use App\Observers\OrganizationApplicationObserver;
 use App\Observers\SeekerApplicationObserver;
 use App\Observers\TransactionObserver;
 use App\Observers\UserObserver;
@@ -41,5 +43,6 @@ class AppServiceProvider extends ServiceProvider
         SeekerApplication::observe(SeekerApplicationObserver::class);
         Transaction::observe(TransactionObserver::class);
         User::observe(UserObserver::class);
+        OrganizationApplication::observe(OrganizationApplicationObserver::class);
     }
 }

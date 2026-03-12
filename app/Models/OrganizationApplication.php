@@ -1,25 +1,20 @@
 <?php
 
-namespace App\Models\Organization;
+namespace App\Models;
 
-use App\Enums\Organization\OrganizationApplicationFile;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class OrganizationApplication extends Model implements HasMedia
+class OrganizationApplication extends Model
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'sid',
         'title',
         'description',
         'category',
-        'requested_amount',
+        'target_amount',
         'collected_amount',
         'seeker_name',
         'seeker_location',
@@ -34,41 +29,39 @@ class OrganizationApplication extends Model implements HasMedia
         'rejection_reason',
     ];
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection(OrganizationApplicationFile::AUTH_FILE->value)->singleFile();
-    }
-
+    /**
+     * Get the organization user who created the application.
+     */
     public function organization()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Get the volunteer assigned to investigate/manage this application.
+     */
     public function assignedVolunteer()
     {
         return $this->belongsTo(User::class, 'assigned_volunteer_id');
     }
 
+    /**
+     * Get the admin user who approved this application.
+     */
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    /**
+     * Accessor to get progress percentage
+     */
     public function getProgressAttribute()
     {
-        if ($this->requested_amount <= 0) {
+        if ($this->target_amount <= 0) {
             return 0;
         }
-        $pct = ($this->collected_amount / $this->requested_amount) * 100;
-
+        $pct = ($this->collected_amount / $this->target_amount) * 100;
         return min(max($pct, 0), 100);
-    }
-
-    protected static function booted()
-    {
-        static::created(function ($organizationApplication) {
-            $organizationApplication->sid = 'OAT-'. 100_000 + $organizationApplication->id;
-            $organizationApplication->save();
-        });
     }
 }

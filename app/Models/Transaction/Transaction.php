@@ -32,6 +32,7 @@ class Transaction extends Model
         'user_bank_id',
         'bank_id',
         'bank_account_id',
+        'organization_application_id', // Added this line
         'volunteer_id',
         'donor_id',
         'created_by',

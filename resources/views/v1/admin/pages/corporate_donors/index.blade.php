@@ -88,11 +88,29 @@
                 <div class="modal-body">
                     <input type="hidden" id="allocate_user_id" name="user_id">
                     <div class="form-group">
+                        <label>Allocation Type</label>
+                        <select class="form-control" id="allocation_type" name="allocation_type" required>
+                            <option value="campaign">Campaign</option>
+                            <option value="organization">Organization Request</option>
+                        </select>
+                    </div>
+
+                    <div id="campaign_selector" class="form-group">
                         <label>Campaign</label>
-                        <select class="form-control" name="campaign_id" required>
+                        <select class="form-control" name="campaign_id">
                             <option value="" disabled selected>Select a campaign…</option>
                             @foreach($campaigns as $campaign)
                                 <option value="{{ $campaign->id }}">{{ $campaign->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div id="organization_selector" class="form-group" style="display: none;">
+                        <label>Organization Request</label>
+                        <select class="form-control" name="organization_application_id">
+                            <option value="" disabled selected>Select an organization request…</option>
+                            @foreach($organizationApplications as $orgApp)
+                                <option value="{{ $orgApp->id }}">{{ $orgApp->title }} ({{ $orgApp->user->name }})</option>
                             @endforeach
                         </select>
                     </div>
@@ -171,7 +189,19 @@ $(document).ready(function () {
         $('#allocate_user_id').val($(this).data('id'));
         $('#donorNameDisplay').text($(this).data('name'));
         $('#allocateForm').trigger('reset');
+        $('#campaign_selector').show();
+        $('#organization_selector').hide();
         $('#allocateModal').modal('show');
+    });
+
+    $('#allocation_type').on('change', function() {
+        if ($(this).val() === 'campaign') {
+            $('#campaign_selector').show().find('select').prop('required', true);
+            $('#organization_selector').hide().find('select').prop('required', false);
+        } else {
+            $('#campaign_selector').hide().find('select').prop('required', false);
+            $('#organization_selector').show().find('select').prop('required', true);
+        }
     });
 
     // ── Submit Allocation
@@ -222,11 +252,16 @@ $(document).ready(function () {
                 if (res.success && res.allocations.length > 0) {
                     res.allocations.forEach(function (allocation) {
                         var date = new Date(allocation.allocated_at).toLocaleDateString();
-                        var campaignTitle = allocation.campaign ? allocation.campaign.title : 'Unknown';
+                        var targetTitle = 'Unknown';
+                        if (allocation.campaign) {
+                            targetTitle = '(Campaign) ' + allocation.campaign.title;
+                        } else if (allocation.organization_application) {
+                            targetTitle = '(Org) ' + allocation.organization_application.title;
+                        }
                         
                         tbody += '<tr>' +
                             '<td>' + date + '</td>' +
-                            '<td>' + campaignTitle + '</td>' +
+                            '<td>' + targetTitle + '</td>' +
                             '<td>Tk ' + parseFloat(allocation.amount).toFixed(2) + '</td>' +
                             '<td>' +
                                 '<button class="btn btn-sm btn-danger btn-refund" data-id="' + allocation.id + '" data-donor-id="'+ donorId +'">' +

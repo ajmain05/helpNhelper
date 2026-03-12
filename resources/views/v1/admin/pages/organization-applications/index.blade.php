@@ -42,6 +42,7 @@
                                                 <th>Organization</th>
                                                 <th>Title</th>
                                                 <th>Requested Amount</th>
+                                                <th>Collected Amount</th>
                                                 <th>Completion Date</th>
                                                 <th>Assigned Volunteer</th>
                                                 <th>Status</th>
@@ -96,6 +97,10 @@
                 {
                     data: 'requested_amount',
                     name: 'requested_amount'
+                },
+                {
+                    data: 'collected_amount',
+                    name: 'collected_amount'
                 },
                 {
                     data: 'completion_date',
