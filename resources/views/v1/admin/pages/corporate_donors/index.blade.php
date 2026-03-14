@@ -110,7 +110,7 @@
                         <select class="form-control" name="organization_application_id">
                             <option value="" disabled selected>Select an organization request…</option>
                             @foreach($organizationApplications as $orgApp)
-                                <option value="{{ $orgApp->id }}">{{ $orgApp->title }} ({{ $orgApp->user->name }})</option>
+                                <option value="{{ $orgApp->id }}">{{ $orgApp->title }} ({{ $orgApp->organization->name ?? 'Unknown' }})</option>
                             @endforeach
                         </select>
                     </div>
