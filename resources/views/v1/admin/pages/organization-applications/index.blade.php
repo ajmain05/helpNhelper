@@ -87,8 +87,8 @@
                     name: 'sid'
                 },
                 {
-                    data: 'user.name',
-                    name: 'user.name'
+                    data: 'organization.name',
+                    name: 'organization.name'
                 },
                 {
                     data: 'title',

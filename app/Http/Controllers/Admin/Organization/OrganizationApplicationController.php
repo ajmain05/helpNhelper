@@ -46,7 +46,7 @@ class OrganizationApplicationController extends Controller
     {
         $searchValue = $request->search['value'] ?? null;
 
-        $organizationApplications = OrganizationApplication::with(['user', 'assignedVolunteer'])
+        $organizationApplications = OrganizationApplication::with(['organization', 'assignedVolunteer'])
             ->when($searchValue, function ($q) use ($searchValue) {
                 $q->where(function ($inner) use ($searchValue) {
                     $inner->where('sid', 'like', "%{$searchValue}%")
@@ -55,7 +55,7 @@ class OrganizationApplicationController extends Controller
                         ->orWhere('collected_amount', 'like', "%{$searchValue}%")
                         ->orWhere('status', 'like', "%{$searchValue}%")
                         ->orWhere('created_at', 'like', "%{$searchValue}%")
-                        ->orWhereHas('user', function ($uq) use ($searchValue) {
+                        ->orWhereHas('organization', function ($uq) use ($searchValue) {
                             $uq->where('name', 'like', "%{$searchValue}%");
                         })
                         ->orWhereHas('assignedVolunteer', function ($vq) use ($searchValue) {
