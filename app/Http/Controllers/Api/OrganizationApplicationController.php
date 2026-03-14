@@ -27,7 +27,7 @@ class OrganizationApplicationController extends Controller
             'seeker_location' => 'required|string|max:255',
             'payment_method' => 'required|string',
             'payment_account' => 'required|string',
-            'cert_image' => 'required|file|mimes:jpeg,png,jpg,pdf|max:5120',
+            'cert_image' => 'required|file|mimes:jpeg,png,jpg,pdf,heic,webp,gif|max:5120',
         ]);
 
         if ($validator->fails()) {
