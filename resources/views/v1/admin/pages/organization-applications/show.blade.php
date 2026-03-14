@@ -126,6 +126,20 @@
                                 <div class="row">
                                     <div class="col">
                                         <p class="m-0">
+                                            <label for="">Verification Document (Organization)</label>
+                                        </p>
+                                        @if ($organizationApplication->cert_image == null)
+                                            <p>No verification document submitted.</p>
+                                        @else
+                                            <a type="button" target="_blank"
+                                                href="/{{ $organizationApplication->cert_image }}"
+                                                class="btn btn-primary">View Document</a>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="m-0">
                                             <label for="">Document</label>
                                         </p>
                                         @if ($organizationApplication->document == null)
