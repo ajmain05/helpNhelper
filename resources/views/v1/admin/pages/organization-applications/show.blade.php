@@ -33,11 +33,11 @@
 
                             <div class="card-body">
                                 <div class="row">
-                                    {{-- <div class="col">
-                    <label for="seeker_id">Organization</label>
-                    <p>{{$organizationApplication->Organization->user->name}}
-                      ({{$organizationApplication->Organization->user->email ?? $organizationApplication->Organization->user->mobile}})</p>
-                  </div> --}}
+                                    <div class="col">
+                                        <label for="seeker_id">Organization</label>
+                                        <p>{{$organizationApplication->organization->name}}
+                                        ({{$organizationApplication->organization->email ?? $organizationApplication->organization->mobile}})</p>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
@@ -105,7 +105,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="created_for">Volunteer</label>
-                                        <p>{{ $organizationApplication?->volunteers[0]?->name ?? 'No volunteer assigned.' }}
+                                        <p>{{ $organizationApplication?->assignedVolunteer?->name ?? 'No volunteer assigned.' }}
                                         </p>
                                     </div>
                                 </div>

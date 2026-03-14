@@ -158,7 +158,7 @@ class OrganizationApplicationController extends Controller
 
     public function show($id)
     {
-        $organizationApplication = OrganizationApplication::with(['user', 'volunteers'])->find($id);
+        $organizationApplication = OrganizationApplication::with(['organization', 'assignedVolunteer'])->find($id);
 
         // return $organizationApplication;
         return view('v1.admin.pages.organization-applications.show', compact('organizationApplication'));
@@ -172,26 +172,26 @@ class OrganizationApplicationController extends Controller
      */
     public function edit($id)
     {
-        $organizationApplication = OrganizationApplication::with(['user'])->find($id);
+        $organizationApplication = OrganizationApplication::with(['organization'])->find($id);
         // Check in the upazila
         $volunteers = User::where('type', Type::Volunteer->value)
             ->where('status', Status::Approved->value)
-            ->when($organizationApplication->user && $organizationApplication->user->upazila_id, function($q) use ($organizationApplication) {
-                $q->where('upazila_id', $organizationApplication->user->upazila_id);
+            ->when($organizationApplication->organization && $organizationApplication->organization->upazila_id, function($q) use ($organizationApplication) {
+                $q->where('upazila_id', $organizationApplication->organization->upazila_id);
             })
             ->get();
 
         // Check in the district
-        if ($volunteers->isEmpty() && $organizationApplication->user && $organizationApplication->user->upazila && $organizationApplication->user->upazila->district) {
-            $allUpazilas = $organizationApplication->user->upazila->district->upazilas()->pluck('id');
+        if ($volunteers->isEmpty() && $organizationApplication->organization && $organizationApplication->organization->upazila && $organizationApplication->organization->upazila->district) {
+            $allUpazilas = $organizationApplication->organization->upazila->district->upazilas()->pluck('id');
             $volunteers = User::where('type', Type::Volunteer->value)
                 ->where('status', Status::Approved->value)
                 ->whereIn('upazila_id', $allUpazilas)
                 ->get();
         }
         // Check in the division
-        if ($volunteers->isEmpty() && $organizationApplication->user && $organizationApplication->user->upazila && $organizationApplication->user->upazila->district && $organizationApplication->user->upazila->district->division) {
-            $allDistricts = $organizationApplication->user->upazila->district->division->districts()->pluck('id');
+        if ($volunteers->isEmpty() && $organizationApplication->organization && $organizationApplication->organization->upazila && $organizationApplication->organization->upazila->district && $organizationApplication->organization->upazila->district->division) {
+            $allDistricts = $organizationApplication->organization->upazila->district->division->districts()->pluck('id');
             $allUpazilas = Upazila::whereIn('district_id', $allDistricts)->pluck('id');
             $volunteers = User::where('type', Type::Volunteer->value)
                 ->where('status', Status::Approved->value)

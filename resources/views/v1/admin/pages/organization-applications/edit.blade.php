@@ -56,7 +56,7 @@
                                     <div class="form-group">
                                         <label for="title">Organization <span class="text-red">*</span></label>
                                         <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            id="title" value="{{ $organizationApplication->user->name }}" disabled>
+                                            id="title" value="{{ $organizationApplication->organization->name ?? 'N/A' }}" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="title">Title <span class="text-red">*</span></label>
@@ -392,9 +392,8 @@
                                                 @endif
                                                 <option value="{{ $volunteer->id }}"
                                                     @if (
-                                                        $organizationApplication->volunteers != null &&
-                                                            sizeof($organizationApplication->volunteers) &&
-                                                            $volunteer->id == $organizationApplication->volunteers[0]->id) selected @endif>
+                                                        $organizationApplication->assignedVolunteer != null &&
+                                                            $volunteer->id == $organizationApplication->assignedVolunteer->id) selected @endif>
                                                     {{ $volunteer->name }} ({{ $volunteer->email ?? $volunteer->mobile }})
                                                     {{ $volunteer->upazila->name }}
                                                 </option>

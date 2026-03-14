@@ -32,6 +32,7 @@ class OrganizationApplication extends Model implements HasMedia
         'assigned_volunteer_id',
         'approved_by',
         'rejection_reason',
+        'completion_date',
     ];
 
     public function registerMediaCollections(): void
