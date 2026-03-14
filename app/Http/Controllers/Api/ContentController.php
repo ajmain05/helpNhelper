@@ -90,4 +90,16 @@ class ContentController extends Controller
 
         return response()->json(['data' => $upazila], Response::HTTP_OK);
     }
+
+    public function settings()
+    {
+        $orgServiceCharge = \App\Models\GeneralSetting::get('org_service_charge', 7.00);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'org_service_charge' => (float) $orgServiceCharge,
+            ]
+        ], Response::HTTP_OK);
+    }
 }

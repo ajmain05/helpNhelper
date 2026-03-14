@@ -50,7 +50,7 @@ class OrganizationApplicationController extends Controller
                     $q->where('name', 'like', '%'.$request->search['value'].'%');
                 });
             })
-            ->orWhereHas('volunteers', function ($query) use ($request) {
+            ->orWhereHas('assignedVolunteer', function ($query) use ($request) {
                 $query->when($request->search['value'] != null, function ($q) use ($request) {
                     $q->where('name', 'like', '%'.$request->search['value'].'%');
                 });
@@ -79,7 +79,7 @@ class OrganizationApplicationController extends Controller
                 return $organizationApplication->sid ?? 'N/A';
             })
             ->editColumn('assigned_volunteer', function ($organizationApplication) {
-                return $organizationApplication->volunteers[0]->name ?? 'N/A';
+                return $organizationApplication->assignedVolunteer->name ?? 'N/A';
             })
             ->editColumn('status', function ($organizationApplication) {
                 $markup = '';
