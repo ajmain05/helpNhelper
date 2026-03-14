@@ -44,25 +44,24 @@ class OrganizationApplicationController extends Controller
      */
     public function getOrganizationApplicationsDatatableAjax(Request $request)
     {
-        $organizationApplications = OrganizationApplication::with('user')
-            ->orWhereHas('user', function ($query) use ($request) {
-                $query->when($request->search['value'] != null, function ($q) use ($request) {
-                    $q->where('name', 'like', '%'.$request->search['value'].'%');
+        $searchValue = $request->search['value'] ?? null;
+
+        $organizationApplications = OrganizationApplication::with(['user', 'assignedVolunteer'])
+            ->when($searchValue, function ($q) use ($searchValue) {
+                $q->where(function ($inner) use ($searchValue) {
+                    $inner->where('sid', 'like', "%{$searchValue}%")
+                        ->orWhere('title', 'like', "%{$searchValue}%")
+                        ->orWhere('requested_amount', 'like', "%{$searchValue}%")
+                        ->orWhere('collected_amount', 'like', "%{$searchValue}%")
+                        ->orWhere('status', 'like', "%{$searchValue}%")
+                        ->orWhere('created_at', 'like', "%{$searchValue}%")
+                        ->orWhereHas('user', function ($uq) use ($searchValue) {
+                            $uq->where('name', 'like', "%{$searchValue}%");
+                        })
+                        ->orWhereHas('assignedVolunteer', function ($vq) use ($searchValue) {
+                            $vq->where('name', 'like', "%{$searchValue}%");
+                        });
                 });
-            })
-            ->orWhereHas('assignedVolunteer', function ($query) use ($request) {
-                $query->when($request->search['value'] != null, function ($q) use ($request) {
-                    $q->where('name', 'like', '%'.$request->search['value'].'%');
-                });
-            })
-            ->when($request->search['value'] != null, function ($q) use ($request) {
-                $q->orWhere('sid', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('title', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('requested_amount', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('collected_amount', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('completion_date', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('status', 'like', '%'.$request->search['value'].'%')
-                    ->orWhere('created_at', 'like', '%'.$request->search['value'].'%');
             })
             ->latest();
 
@@ -99,7 +98,6 @@ class OrganizationApplicationController extends Controller
                 return $organizationApplication->created_at ?? 'N/A';
             })
             ->rawColumns(['action', 'status', 'sid', 'created_at'])
-            ->setFilteredRecords($organizationApplications->count())
             ->make(true);
     }
 
